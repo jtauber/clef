@@ -1,0 +1,51 @@
+The teacher [looked] at the class and [smiled].
+The sun [rose] over the city and traffic [filled] the streets.
+The broken window [let] in the cold air.
+    In the saved Stanza parse, *let* is tagged VB and analysed as an imperative, with no past-tense feature, so both CLEF rules miss this occurrence. The annotation gives the intended past-tense reading.
+The door [was] open.
+He has written three letters today.
+    "written" is a past participle (VBN), not a past-tense form.
+She['d] left before we [arrived].
+She'd leave if she could.
+    "'d" is WOULD here.
+You {had} better go.
+    HAD BETTER is treated as a modal (see Conventions). The xpos rule counts it.
+I[?'d] read it.
+    HAD or WOULD? Unresolved without more context: no rule is scored on it.
+
+@from le_foll_2024
+It [fell] and [broke].
+I [implemented] it.
+If I [were] rich.
+
+# Cases where the tools' rules differ.
+I [did] see her at the station.
+    Emphatic *did* is a finite past form. MAT retags DO before a verb as an emphatic, so its rule misses it.
+You{'d} better hurry.
+    HAD BETTER is treated as a modal (see Conventions). MFTE turns *'d* before *better* into HAD, so its rule counts it.
+The parcels [were] {delivered} this morning.
+    A passive participle. If a tagger tags it VBD, as happens with -ed forms, MFTE's rule leaves it out while the xpos, MAT and pybiber rules count it.
+They [were] {selected} and {extracted}.
+    Coordinated passive participles. Even if both are tagged VBD, MFTE's rule leaves both out, so only *were* counts.
+They [were] {selected} or {extracted}.
+    MFTE applies the same passive correction after *or*.
+They [were] {selected} and {extracted} and {transported}.
+    MFTE carries the passive correction through the chain; only *were* counts.
+They [selected] and [extracted] the samples.
+    Two finite past-tense verbs. Without the passive context, both count.
+They [had] {finished} by noon.
+    A perfect participle. If it is tagged VBD, only MFTE's rule leaves it out.
+He [got] {arrested} at the border.
+    A GET-passive participle. If it is tagged VBD, only MFTE's rule leaves it out.
+Everyone who [was] there [signed] the card.
+    MFTE's rule takes an -ed form after BE and an adverb (*was there*) to be a passive participle, so it misses *signed*.
+Anyone who [had] questions [asked] them at the end.
+    MFTE's rule takes an -ed form after HAVE and a noun to be a perfect participle, so it misses *asked*.
+What I [got] [was] a refund.
+    MFTE's rule takes any past form right after GET to be a GET-passive, so it misses *was*.
+She [had] to leave.
+    Finite past HAVE. MFTE replaces it with its necessity-modal tag, so its rule misses it.
+She [needed] to leave.
+    Finite past NEED. MFTE applies the same necessity-modal correction.
+She has not really {got} {arrested}.
+    Both are participles. If *arrested* is tagged VBD, MFTE leaves it as past tense: *got* has already been tagged as HAVE got and cannot trigger its GET-passive correction.

@@ -1,0 +1,244 @@
+rules:
+  - id: ud
+    match:
+      - semgrex: |
+          {lemma:have} <aux {xpos:VBN}
+      - semgrex: |
+          {lemma:have} <aux ({} >/aux|aux:pass|cop/ {xpos:VBN})
+      - semgrex: |
+          {form:/['’]d/} <aux {xpos:VBN}
+      - semgrex: |
+          {form:/['’][ds]/} <aux ({} >/aux|aux:pass|cop/ {form:been})
+    unless:
+      - semgrex: |
+          {form:/['’]d/} <aux ({} >/aux|aux:pass|cop/ {form:/(?i:have|['’]ve|be|get)/})
+      - semgrex: |
+          {lemma:have} <aux ({form:/[Gg]ot/} >obj {})
+      - semgrex: |
+          {lemma:have} <aux ({form:/[Gg]ot/} >xcomp {xpos:VB})
+      - semgrex: |
+          {form:/['’]d/} <aux ({form:/[Gg]ot/} >obj {})
+      - semgrex: |
+          {form:/['’]d/} <aux ({form:/[Gg]ot/} >xcomp {xpos:VB})
+    note: |
+      The rule anchors on HAVE and follows its `aux` relation to the
+      predicate. The first pattern requires that predicate to be a past
+      participle. The second also allows a predicate with a VBN auxiliary,
+      passive auxiliary or copula, covering *has been working* and *have
+      you been on an exchange*. UD makes the non-verbal predicate the head in copular
+      constructions. The parentheses let the rule check that head's
+      dependents while keeping HAVE as the anchor.
+
+      Lemmatizers often give *'d* the lemma *would* and *'s* the lemma *be*,
+      even in perfects. The third pattern takes *'d* attached to a past
+      participle to be HAD. The fourth recognises both *'d* and *'s* when
+      *been* is an `aux`, `aux:pass` or `cop` dependent of the same head.
+      This covers *they'd been working*, *she'd been ill* and *it's been
+      repaired*. Other perfects with *'s* (*she's left*) are missed when
+      the lemma is *be*, because *'s* before a participle can also be IS.
+      The contraction patterns accept both straight and curly apostrophes.
+
+      The exclusions use the same auxiliary anchor. A contracted *'d*
+      with *have*, *'ve*, *be* or *get* as another auxiliary or copula of
+      the same head is treated as WOULD: *she'd have left* has one perfect,
+      anchored on *have*, and *she'd be arrested* has none. The remaining
+      exclusions take *have got*, including *'d got*, with an object or a
+      *to*-infinitive to express possession or obligation, so *I've got a
+      new job* (obtained) is missed as well.
+
+  - id: xpos
+    match:
+      - cql: |
+          @[lemma="have" | form="['’]d"%c] [xpos="RB.*"]{0,2} [xpos="VBN"]
+      - cql: |
+          @[form="['’]s"] [xpos="RB.*"]{0,2} [form="been"%c]
+      - cql: |
+          (<s> | [xpos="W.*"]) @[lemma="have"] [xpos="DT|PDT|PRP.*|JJ.*|NN.*|CD|EX"]{1,3} [xpos="RB.*"]{0,2} [xpos="VBN"]
+    unless:
+      - cql: |
+          @[lemma="have" | form="['’]d"%c] [xpos="RB.*"]{0,2} [form="got"%c] ([xpos="DT|PDT|PRP.*|NN.*|CD|TO"] | [xpos="JJ.*"] [xpos="JJ.*"]* [xpos="NN.*"])
+      - cql: |
+          (<s> | [xpos="W.*"]) @[lemma="have"] [xpos="DT|PDT|PRP.*|JJ.*|NN.*|CD|EX"]{1,3} [xpos="RB.*"]{0,2} [form="got"%c] ([xpos="DT|PDT|PRP.*|NN.*|CD|TO"] | [xpos="JJ.*"] [xpos="JJ.*"]* [xpos="NN.*"])
+    note: |
+      For pipelines without a dependency parse. Up to two adverbs may come
+      between the auxiliary and the participle (*has not yet left*).
+      Inversion (*has she left*, *why had they gone*) is allowed only at the
+      start of a sentence or after a *wh*-word, so that *we had it fixed* is
+      not counted. As in the ud rule, *'d* before a participle is taken to
+      be HAD, *'s* is taken to be HAS only before *been*, and *have got*
+      followed by a noun phrase or *to* is taken to express possession or
+      obligation. The exclusions cover both statements and inverted
+      questions, including contracted *'d got*. An adjective-led object
+      such as *serious problems* is allowed; the adjective must be followed
+      by a noun, so *has got better* still counts. As in the ud rule, the
+      contraction patterns accept both straight and curly apostrophes.
+
+  - id: biber
+    from: biber_1988
+    at: p. 223
+    match:
+      - cql: |
+          [form="have|has|had|having|'ve|'d"%c] [xpos="RB.*"]{0,2} @[xpos="VBD|VBN"]
+      - cql: |
+          [form="have|has|had|having|'ve|'d"%c] [xpos="NN.*|PRP.*"] @[xpos="VBD|VBN"]
+    note: |
+      Reconstructed from Biber's description: HAVE + (ADV) + (ADV) + VBN, and
+      HAVE + N/PRO + VBN for questions. His HAVE is *have*, *has*, *had*,
+      *having*, *'ve* and *'d* and their negative forms, and his VBN covers
+      any past tense form as well as irregular past participles (p. 222), so
+      the participle may be tagged VBD or VBN. His tagger marked the perfect
+      on the participle (Table II.1, p. 218), so the rule anchors there.
+      Without *'s*, perfects such as *it's been raining* are missed. The second pattern also matches *have*
+      with an object and a participle (*had it fixed*), and *'d* is taken to
+      be HAD wherever a past form follows (*I'd read it*).
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, perfect aspects
+    match:
+      - cql: |
+          @[form="have|has|had|having|hath"%c] [xpos="RB.*"]{0,2} [xpos="VBD|VBN"]
+      - cql: |
+          @[form="have|has|had|having|hath"%c] [form="not|n't"%c & xpos="RB.*"]{0,1} [xpos="NN.*|PRP.*"] [xpos="VBD|VBN"]
+    unless:
+      - cql: |
+          @[form="have|has|had|having|hath"%c] [form="not|n't"%c & xpos="RB.*"]{0,1} [form=$mat/indefinite-pronouns%c] [xpos="VBD|VBN"]
+    note: |
+      MAT 1.3.2 adds its PEAS tag to HAVE, following Biber's patterns with
+      one addition, a negated question (*hasn't he seen*). Its negation pass
+      recognizes *not* and *n't* only with a tag beginning RB, so a negator
+      mistagged NN cannot supply that extra position before the subject.
+      Its HAVE list includes *'ve*, but the list is matched after a word
+      boundary, which a token beginning with an apostrophe never has, so
+      contracted perfects (*I've seen*) are never counted; *'s* and *'d* are
+      not in the list.
+      MAT retags indefinite pronouns before this rule runs, so a question
+      such as *has anyone called* is missed. That earlier pass includes
+      *nowhere*, which is also kept in the exclusion list. Like Biber's,
+      its second pattern also matches *have* with an object and a
+      participle (*had it fixed*).
+
+  - id: mfte
+    from: mfte
+    at: MFTE.py, lines 394-398, 649-664, 806-822, 894-917, 1121-1123
+    match:
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|PRP.*|CC|UH"]{0,1} @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|CC" & form!=$mfte/hedges%c] [] @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="NN.*"] @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          [form="'d"%c & xpos="MD"] [xpos="RB.*" & form!="not|n['’]t|nt"%c]{0,1} @[xpos="VBN"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|UH" & form!=$mfte/hedges%c]{0,1} @[form="got.*"%c] [xpos="VBD|VBN"]
+    unless:
+      - cql: |
+          [form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*"] [xpos="RB.*|CC|NN.*|PRP.*"]{0,2} @[xpos="VBN" | (form=".*(ed|en)" & xpos="VBD")]
+      - cql: |
+          [form="['’]s" & xpos="VBZ"] [xpos="RB.*|CC|NN.*|PRP.*"]{0,1} @[(xpos="VBN" | (form=".*(ed|en)" & xpos="VBD")) & form!="been|had|done"%c & form!=$mfte/stative-verbs%c]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [(xpos="RB.*|UH|NN.*" | form="i|we|he|she|they" | (form="it" & xpos="P.*")) & form!=$mfte/hedges%c]{0,2} @[form="got.*"%c] [xpos!="VBD|VBN"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*" & form!=$mfte/hedges%c] [xpos="RB.*" & form!=$mfte/hedges%c] @[form="got.*"%c]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [form=$mfte/hedges%c] @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          @[form="had"%c] [form="to" & xpos="TO"]
+      - cql: |
+          [form="get|gets|got|getting"%c & xpos="VB.*"] [xpos="NN.*|PRP|RB.*"]{0,1} @[xpos="VBD|VBN"]
+      - cql: |
+          [form="get|gets|got|getting"%c & xpos="VB.*"] [xpos="DT|NN.*"] [xpos="NN.*"] @[xpos="VBD|VBN"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|UH" & form!=$mfte/hedges%c]{0,1} [form="got.*"%c] @[xpos="VBD|VBN"]
+      - cql: |
+          ([(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] ([xpos="RB.*|PRP.*|CC|UH"]{0,1} | [xpos="RB.*|CC"] [] | [xpos="NN.*"]) | [form="'d"%c & xpos="MD"] [xpos="RB.*" & form!="not|n['’]t|nt"%c]{0,1}) [form="had"%c & xpos="VBN"] ([xpos="RB.*|PRP.*|CC|UH|NN.*"] | [xpos="RB.*|CC"] []) @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          ([(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] ([xpos="PRP.*|UH|NN.*"]{0,1} | [xpos="RB.*|CC"] []) | [form="'d"%c & xpos="MD"]) [form="had"%c & xpos="VBN"] @[(form=".*ed" & xpos="VBD") | xpos="VBN"]
+      - cql: |
+          @[form="du"%c] [form="n"] [form="no"]
+      - cql: |
+          [form="du"%c] @[form="n"] [form="no"]
+      - cql: |
+          [form="du"%c] [form="n"] @[form="no"]
+    note: |
+      MFTE 1.6.0.2 tags the participle, not *have*. Its HAVE is *have*,
+      *has*, *had*, *having*, *hath*, *'ve*, *'d* and *'s*, and the
+      participle may be tagged VBN, or VBD if it ends in -ed. Between them
+      it allows an adverb, pronoun or coordinator, a noun (*has John left*),
+      or an adverb and any other token (*haven't you noticed*). So *have you
+      ever seen* is missed.
+
+      MFTE runs its passive rule first, and that rule claims participles
+      after a form of BE, including *'s*. After *'s* only *been*, *had*,
+      *done* and a list of verb forms such as *gone* and *become* are taken
+      back as perfects, so *she's left* counts as a passive. *got*, or any
+      word beginning *got*, after HAVE is HAVE *got*. It is changed back
+      to perfect when a participle immediately follows and HAVE is adjacent
+      or separated by one qualifying adverb (*has not got arrested*).
+      Without that correction, *has gotten better* is missed.
+      Its HAVE *got* subject list names lower-case *i*, *we*, *he*, *she*,
+      *it* and *they*, as well as nouns. The pronoun forms are matched
+      case-sensitively and omit *you*, so *Have you got a car?* and *Have I
+      got a car?* still count as perfects when *got* is tagged VBN. The
+      exclusion preserves this source quirk.
+
+      A contracted *'d* that Stanza tagged as a modal is turned into HAD
+      before a participle, optionally with an intervening adverb. Negators
+      do not qualify because MFTE has already changed their tags. Its
+      auxiliary lists accept straight and curly apostrophes, but this
+      correction of modal *'d* requires a straight apostrophe.
+
+      A participle already retagged as a GET-passive cannot also be a
+      perfect anchor: *has not got arrested* counts on *got*, not on
+      *arrested*. Once *had* is tagged as a perfect participle, it no longer
+      supplies HAVE for a later match, so *have not had it done* counts
+      only on *had*. An independent match from the earlier auxiliary can
+      still count a later participle.
+
+      With two qualifying adverbs, *has not really got arrested* and
+      *has not really gotten arrested*, MFTE leaves *got* or *gotten* tagged
+      as HAVE *got* (HGOT). Its correction back to perfect only allows zero
+      or one intervening adverb, so these perfects are missed even though
+      another participle follows.
+
+      MFTE later replaces *had* immediately before infinitival *to* with
+      its necessity-modal tag. That removes the perfect in *has had to
+      leave*. Its corresponding NEED correction only matches a verb tag,
+      so *needed* already tagged as a perfect in *has needed to leave*
+      keeps its perfect tag.
+
+      The earlier *du n no* correction also removes any VBN or VBD tags
+      from those three tokens. The exclusions prevent a mistagged piece
+      of *dunno* from becoming a perfect anchor.
+
+      The words allowed between the auxiliary and the participle are
+      approximated: MFTE lists particular tag sequences, some of them tags
+      it assigns itself. It tags *probably*, *perhaps* and its other hedges
+      first, so they cannot supply an adverb in the HAVE *got* patterns or
+      the first position of a two-token perfect gap. The general perfect
+      pattern leaves the second token unrestricted: *has not probably got*
+      can still count, while *has probably not got* does not. A single
+      intervening hedge also blocks the rule (*has probably left*).
+
+  - id: pybiber
+    from: pybiber
+    tagsets: {deprel: clearnlp}
+    match:
+      - semgrex: |
+          {lemma:have} </aux|auxpass/ {}
+    note: |
+      pybiber 0.3.1 counts every token with the lemma *have* whose
+      dependency relation contains `aux` (parse_functions.py,
+      `_block_aux_tense`), with the ClearNLP labels of spaCy's
+      en_core_web_sm. The Semgrex reconstruction follows an `aux` or
+      `auxpass` attachment and anchors on HAVE. Pybiber's substring check
+      also accepts a supplied nonstandard label such as `xaux`, which this
+      rule excludes. That difference is recorded on controlled input
+      outside the declared ClearNLP tagset.
+
+      Pybiber trusts the parser to find perfect auxiliaries across adverbs
+      and inversion, so it counts *have got* (*I've got a car*). In the
+      saved spaCy parses, *'s* in *it's been raining* has the lemma *be*,
+      and *'d* in *they'd eaten* is a modal with the lemma *would*, so these
+      perfects are missed.

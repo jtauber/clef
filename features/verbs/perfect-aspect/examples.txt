@@ -1,0 +1,100 @@
+# Brackets mark HAVE and the participles in its verb sequence.
+# Pieces with the same subscript belong to one occurrence.
+# Detections are evaluated by their anchors, not their surrounding spans.
+
+They [have finished] the report.
+The children [had gone] to bed by nine.
+She [has been working] here for years.
+The bridge [has been closed] since May.
+You should [have called] me.
+[Having finished] his lunch, he left.
+    spaCy gives sentence-initial *Having* the lemma *having*, so the pybiber rule misses it.
+I seem to [have lost] my keys.
+She [has]₁ never [been]₁ there.
+    UD makes *there* the head, but the ud rule anchors on *has*.
+She has three sisters.
+    "has" is a main verb here, not an auxiliary.
+The window{'s broken}.
+    "'s" is IS here, not HAS.
+[Have]₁ you [finished]₁? Yes, I {have}.
+    The second "have" has no participle: see Conventions.
+
+@from le_foll_2024
+He [has been told] before.
+[Have]₁ you [been]₁ on a student exchange?
+    UD makes *exchange*, the head noun of *student exchange*, the head of the clause, but the ud rule anchors on *Have*.
+She['d]₁ already [seen]₁ it.
+
+# Cases where the tools' rules differ.
+I['ve finished] the report.
+    MAT's HAVE list includes *'ve* but never matches it, so its rule misses this.
+It['s been raining] all day.
+    Biber's and MAT's HAVE leave out *'s*, and spaCy gives *'s* the lemma *be*, so the biber, MAT and pybiber rules miss this.
+She['s left] the building.
+    MFTE takes a participle after *'s* to be a passive unless it is *been*, *had*, *done* or one of a few verbs such as *gone*, so its rule misses this. The other pattern rules miss it too: *'s* before a participle can also be IS.
+They['d]₁ already [eaten]₁.
+    MAT's HAVE leaves out *'d*. spaCy tags this *'d* as a modal (*would*), so the pybiber rule misses it too.
+[Have]₁ you ever [seen]₁ it?
+    The subject and an adverb come between the auxiliary and the participle, which Biber's, MAT's and MFTE's patterns do not allow.
+She [has]₁ probably [left]₁.
+    MFTE tags *probably* as a hedge before its perfect rule runs, which blocks the rule.
+[Has]₁ anyone [called]₁?
+    MAT tags *anyone* as a quantifier pronoun first, so its question pattern misses this.
+We {had}₁ it {repaired}₁ last week.
+    *had* with an object and a participle: not a perfect. The biber, MAT and MFTE rules count it.
+She [has gotten] much better.
+    MFTE takes any word beginning *got* after HAVE to be HAVE *got*, so its rule misses this.
+He {has got} to leave early.
+    HAVE *got* expressing obligation: see Conventions. The biber, MAT and pybiber rules count it.
+{Have}₁ you {got}₁ a car?
+    Possession. The xpos exclusion allows the same intervening subject as its question pattern. MFTE omits *you* from its HAVE got subject list, so it counts a perfect here when *got* is tagged VBN.
+{Has}₁ she {got}₁ to leave?
+    Obligation, with subject–auxiliary inversion.
+I{'ve got} serious problems.
+    Possession with an adjective-led object.
+She [has got] better.
+    *better* is an adjectival complement, not an object: this is a perfect of GET meaning "become".
+She [has had] to leave.
+    MFTE replaces perfect *had* before infinitival *to* with its necessity-modal tag, so its rule misses the perfect.
+She [has needed] to leave.
+    MFTE keeps *needed* after tagging it as a perfect; its NEED-to correction only replaces a verb tag.
+She [has]₁ not [got arrested]₁.
+    One perfect. MFTE tags *got* as perfect and *arrested* as a GET-passive, so only *got* is a perfect anchor.
+I [have]₁ not [had]₁ it {done}.
+    One perfect of causative HAVE. The object *it* and its complement *done* are outside the perfect verb sequence. MFTE tags *had* as perfect, so it cannot also supply HAVE for a second match on *done*.
+
+# Contracted auxiliaries.
+They['d been working].
+She['d been] ill.
+    *ill* is a non-verbal predicate; the ud rule anchors on *'d*.
+It['s been repaired].
+    UD attaches passive *been* with aux:pass.
+He{'d got} to leave.
+    HAD got expressing obligation: see Conventions.
+He{'d got} a car.
+    Possession reading of HAD got: see Conventions.
+She{'d} [have left].
+    *'d* is WOULD. The perfect is anchored on *have*, not *'d*.
+She{'d be arrested}.
+    *'d* is WOULD; this is a passive without perfect aspect.
+They[’d been working].
+She[’d]₁ already [eaten]₁.
+It[’s been raining].
+    Curly apostrophes do not change the construction; the ud and xpos rules accept both spellings.
+She{’d} [have left].
+    Curly *’d* is WOULD; the perfect is on *have left*.
+She{’d be arrested}.
+He{’d got} a car.
+    Possession reading, with a curly apostrophe.
+
+# Discontinuous constructions and separate occurrences.
+She [has]₁, as {expected}, [left]₁.
+    In the saved Stanza parse, *left* is tagged VBD rather than VBN, so the ud rule misses the perfect despite the correct auxiliary attachment. The xpos rule also misses it because its gap pattern does not allow the parenthetical phrase.
+[Has]₁ she [been working]₁?
+She [has left], and he [has stayed].
+
+# Two intervening adverbs.
+She [has]₁ not really [got arrested]₁.
+    One perfect. MFTE leaves *got* tagged as HAVE got: its correction back to perfect allows only zero or one intervening adverb.
+She [has]₁ not really [gotten arrested]₁.
+    The same source limitation applies to *gotten*, because MFTE's HAVE got rule matches any word beginning with *got*.

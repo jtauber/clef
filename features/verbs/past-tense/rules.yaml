@@ -1,0 +1,154 @@
+rules:
+  - id: xpos
+    match:
+      - cql: |
+          [xpos="VBD"]
+    note: |
+      Taggers give *had* in *had better* VBD, so this rule counts it against
+      the conventions. Contracted *'d* is only as good as the tagger's choice
+      between HAD (VBD) and WOULD (MD).
+
+  - id: ud-feats
+    match:
+      - cql: |
+          [upos="VERB|AUX" & feats.Tense="Past" & feats.VerbForm="Fin"]
+    note: |
+      The same feature stated with UD morphological features instead of a
+      Penn tag, for pipelines that emit `feats` but no reliable `xpos`.
+
+  - id: mat
+    from: mat
+    match:
+      - cql: |
+          [xpos="VBD"]
+    unless:
+      - cql: |
+          @[form="do|does|did|doing|done"%c] [xpos="V.*"]
+    note: |
+      MAT 1.3.2 counts tokens that retain VBD after its retagging passes.
+      It retags DO directly followed by a verb as an emphatic
+      (Tagger_MAT.pl, emphatics). Its perfect and passive rules tag HAVE
+      and BE and leave the participle alone, so a participle mistagged VBD
+      after them still counts.
+      Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
+      of the supplied tag; any of these mistagged VBD is excluded before a verb.
+
+      This reconstruction uses the supplied POS tags with the DO exclusion
+      above. MAT's other lexical retagging is only partly represented. For
+      example, MAT changes *all* to QUAN even if its input tag is VBD. This
+      rule retains that supplied tag and counts *all* as past tense. This
+      difference is recorded on deliberately mistagged input.
+
+  - id: mfte
+    from: mfte
+    at: MFTE.py, lines 394-398, 651-664, 806-822, 898-924, 1121-1123
+    match:
+      - cql: |
+          [xpos="VBD"]
+      - cql: |
+          @[form="'d"%c & xpos="MD"] [xpos="RB.*" & form!="not|n['’]t|nt"%c]{0,1} [xpos="VBN"]
+      - cql: |
+          @[form="'d"%c & xpos="MD"] [form="better"%c]
+    unless:
+      - cql: |
+          [(form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ")] [xpos="RB.*|CC|NN.*|PRP"]{0,2} @[form=".*(ed|en)"%c & xpos="VBD"]
+      - cql: |
+          @[form="need|needs|needed|have|has|had|having"%c & xpos="V.*"] [form="to" & xpos="TO"]
+      - cql: |
+          [form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*"] [xpos="RB.*|CC|NN.*|PRP"]{0,2} [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+      - cql: |
+          [form="['’]s" & xpos="VBZ"] [xpos="RB.*"]{0,1} [(xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")) & form!="been|had|done"%c & form!=$mfte/stative-verbs%c] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+      - cql: |
+          [form="['’]s" & xpos="VBZ"] [xpos="CC|NN.*|PRP"] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|CC|NN.*|PRP"]{0,2} @[form=".*ed"%c & xpos="VBD"]
+      - cql: |
+          (
+            [form="get|gets|getting"%c & xpos="VB.*"]
+            | (
+                <s> []{0,2}
+                | [(form!="have|has|['’]ve|had|having|['’]d"%c | xpos!="V.*") & (form!="['’]s" | xpos!="VBZ") & form!="hath"%c] [] []
+                | [xpos!="RB.*" | form=$mfte/hedges%c] []
+                | [xpos!="RB.*" | form=$mfte/hedges%c]
+              ) [form="got"%c & xpos="VB.*"]
+          )
+          ([xpos="NN.*|PRP|RB.*"]{0,1} | [xpos="DT|NN.*"] [xpos="NN.*"])
+          @[xpos="VBD"]
+      - cql: |
+          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [(xpos="RB.*|NN.*" | form="i|we|he|she|they" | (form="it" & xpos="P.*")) & form!=$mfte/hedges%c]{0,2} @[form="got"%c & xpos="VBD"]
+      - cql: |
+          @[form="du"%c] [form="n"] [form="no"]
+      - cql: |
+          [form="du"%c] @[form="n"] [form="no"]
+      - cql: |
+          [form="du"%c] [form="n"] @[form="no"]
+    note: |
+      MFTE 1.6.0.2 counts the tokens Stanza tags VBD that keep that tag. It
+      takes an -ed or -en form after BE, and an -ed form after HAVE, to be
+      mistagged participles (passive and perfect), any VBD form after GET to
+      be a GET-passive, and *got* after HAVE to be HAVE *got*. Its HAVE
+      *got* subject list names lower-case *i*, *we*, *he*, *she*, *it* and
+      *they*, as well as nouns. The pronoun forms are case-sensitive and
+      omit *you*, so *got* tagged VBD still counts in *Have you got a car?*
+      and *Have I got a car?*.
+
+      With two qualifying adverbs between HAVE and *got*, MFTE changes
+      *got* to its HAVE *got* tag (HGOT) before processing the following
+      word. Its correction back to perfect allows only zero or one adverb,
+      so *got* can no longer trigger the GET-passive rule. In *has not
+      really got arrested*, *arrested* therefore still counts if tagged
+      VBD. The GET-passive exclusion checks the three tokens before *got*
+      to preserve this exception. Words already tagged as hedges, such as
+      *probably*, do not qualify as adverbs in the HAVE *got* patterns.
+
+      It also removes an -ed or -en form tagged VBD when it follows a passive
+      participle and *and* or *or*, continuing through longer chains. The
+      first participle may be tagged VBN or mistagged VBD. Immediately
+      after *'s*, or with one intervening adverb, the coordination patterns
+      leave out the forms MFTE reclassifies as perfects: *been*, *had*,
+      *done* and its stative-verb list.
+
+      MFTE also replaces HAVE and NEED immediately before infinitival *to*
+      with its necessity-modal tag, so *had* in *had to leave* and *needed*
+      in *needed to leave* do not count.
+
+      MFTE also corrects *du n no* before these rules run, changing its
+      tokens to present tense, negation and base verb. None retains a VBD
+      tag, so the exclusions cover all three possible anchor positions.
+
+      It also turns a contracted *'d* that Stanza tagged as a modal into
+      VBD (HAD) before a past participle, before an adverb and a participle,
+      and before *better*. This correction requires a straight apostrophe
+      and does not allow an intervening negator. Its auxiliary lists accept
+      either apostrophe. The words allowed between the auxiliary and the
+      verb are approximated: MFTE lists particular sequences of adverbs,
+      negators and (pro)nouns. These patterns use the original POS tags and
+      do not reproduce all of MFTE's earlier retagging, which can also
+      affect whether it recognises the passive context. For example, MFTE
+      temporarily retags *he* as a filled pause; these patterns still allow
+      it between BE and the participle when its input tag is PRP.
+
+  - id: pybiber
+    from: pybiber
+    tagsets: {deprel: clearnlp}
+    match:
+      - cql: |
+          [xpos="VBD" & deprel!="punct"]
+    note: |
+      pybiber 0.3.1 counts the matches of `\S*_vbd` in a document's
+      lower-cased word_TAG pairs (biber_dict.py), with the tags of spaCy's
+      en_core_web_sm. Before matching, it clears the POS tag of tokens
+      whose dependency relation is `punct` (parse_functions.py,
+      `_block_regex_features`), so their original POS tag does not
+      contribute to the count.
+      Auxiliaries, irrealis *were* and *had* in *had better* all count.
+
+      This reconstruction tests the POS and dependency fields directly.
+      Pybiber's regex has no boundary after the tag, so it also counts a
+      non-Penn tag such as VBDX. It can find `_vbd` inside a word form such
+      as `label_vbd` even when that token is tagged NN. This rule requires
+      VBD in the POS field and omits both string-matching behaviours.
+      Pybiber also drops tokens whose form is a single space; this rule
+      counts such a token if it is supplied with VBD and a dependency
+      relation other than `punct`. These differences are recorded on
+      controlled inputs.

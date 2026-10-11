@@ -1,0 +1,102 @@
+rules:
+  - id: xpos
+    match:
+      - cql: |
+          [xpos="VBP|VBZ"]
+    note: |
+      Imperatives and subjunctives are base forms (VB), so they are left out
+      unless the tagger mistakes them for present forms. Modals are MD.
+
+  - id: ud-feats
+    match:
+      - cql: |
+          [upos="VERB|AUX" & feats.Tense="Pres" & feats.VerbForm="Fin"]
+    note: |
+      The same feature stated with UD morphological features instead of a
+      Penn tag, for pipelines that emit `feats` but no reliable `xpos`.
+      Imperatives have Mood=Imp and no Tense, and English modals have no
+      Tense, so both are left out. Stanza gives a subjunctive *be* (*that he
+      be told*) Tense=Pres, so this rule counts it against the conventions.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, present tenses
+    match:
+      - cql: |
+          [xpos="VBP|VBZ"]
+    unless:
+      - cql: |
+          @[form="do|does|did|doing|done"%c] [xpos="V.*"]
+    note: |
+      MAT 1.3.2 derives its present-tense count from tokens tagged VBP or
+      VBZ after its earlier retagging passes. It retags DO directly followed
+      by a verb as an emphatic (Tagger_MAT.pl, emphatics).
+      Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
+      of the supplied tag, so even *did* mistagged VBP is excluded here.
+
+      This reconstruction uses the supplied POS tags with the DO exclusion
+      above. MAT's other lexical retagging is only partly represented. For
+      example, MAT changes *really* to EMPH even if its input tag is VBP.
+      This rule retains that supplied tag and counts *really* as present
+      tense. This difference is recorded on deliberately mistagged input.
+
+  - id: mfte
+    from: mfte
+    at: MFTE.py, lines 394-406, 1121-1123, 1170-1171
+    match:
+      - cql: |
+          [xpos="VBP|VBZ"]
+      - cql: |
+          @[form="have"%c & xpos="VB"] [xpos="PRP.*"] [xpos="VBN|VBD"]
+      - cql: |
+          [form="there"%c & xpos="EX"] @[xpos="POS"]
+      - cql: |
+          @[form="du"%c & xpos="\w.*"] [form="n"] [form="no"]
+    unless:
+      - cql: |
+          @[form="mind"%c] [form="you"%c]
+      - cql: |
+          @[form="need|needs|needed|have|has|had|having"%c & xpos="V.*"] [form="to" & xpos="TO"]
+      - cql: |
+          [form="du"%c] @[form="n"] [form="no"]
+      - cql: |
+          [form="du"%c] [form="n"] @[form="no"]
+    note: |
+      MFTE 1.6.0.2 counts the tokens Stanza tags VBP or VBZ that keep that
+      tag. It corrects two tagging errors first: *have* tagged as a base
+      form before a pronoun and a participle (*Have you seen it?*), and *'s*
+      tagged as a possessive after existential *there*. It takes *mind* in
+      *mind you* to be a discourse marker. It replaces HAVE and NEED
+      immediately before infinitival *to* with its necessity-modal tag,
+      so *has* in *has to leave* and *needs* in *needs to leave* do not
+      count.
+
+      When *dunno* is tokenized as *du n no*, MFTE changes the tags to
+      present tense, negation and base verb, respectively. The added match
+      anchors on *du*; exclusions prevent *n* or *no* from also counting
+      if their original tags were VBP or VBZ. The source ignores case for
+      *du* but requires lower-case *n* and *no*. This correction requires
+      three tokens. A single-token *dunno* is governed by the ordinary POS
+      patterns instead.
+
+  - id: pybiber
+    from: pybiber
+    tagsets: {deprel: clearnlp}
+    match:
+      - cql: |
+          [xpos="VBP|VBZ" & deprel!="punct"]
+    note: |
+      pybiber 0.3.1 counts the matches of `\S*_vbz` and `\S*_vbp` in a
+      document's lower-cased word_TAG pairs (biber_dict.py), with the tags
+      of spaCy's en_core_web_sm. Before matching, it clears the POS tag of
+      tokens whose dependency relation is `punct` (parse_functions.py,
+      `_block_regex_features`), so their original POS tag does not
+      contribute to the count.
+
+      This reconstruction requires the standard upper-case Penn tags VBP
+      and VBZ. Pybiber lowercases its combined word/tag strings before
+      searching, so it also counts a supplied lower-case `vbz`; this rule
+      does not. The difference is recorded on controlled input. As with
+      past tense, this pattern omits the source's matching of tag prefixes
+      and substrings inside word forms, and its filtering of single-space
+      tokens.

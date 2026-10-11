@@ -1,0 +1,16 @@
+# title: Indefinite-pronoun forms used by CLEF's MAT perfect-aspect exclusion
+# from: mat
+# match: form
+anybody
+anyone
+anything
+everybody
+everyone
+everything
+nobody
+none
+nothing
+nowhere
+somebody
+someone
+something

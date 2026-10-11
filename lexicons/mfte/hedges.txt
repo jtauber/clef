@@ -1,0 +1,15 @@
+# title: Single words MFTE unconditionally tags as hedges (HDG)
+# from: mfte
+# match: form
+allegedly
+apparently
+conceivably
+maybe
+perhaps
+possibly
+predictably
+presumably
+probably
+purportedly
+roughly
+somewhat

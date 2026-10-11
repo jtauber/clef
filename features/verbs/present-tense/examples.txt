@@ -1,0 +1,38 @@
+She [works] in a bank and [lives] near the station.
+They [are] waiting outside.
+    *are* counts; *waiting* is a participle.
+[Do] you know him?
+    *know* is a base form after DO.
+I['m] tired and you['re] late.
+The train [leaves] at six tomorrow.
+If it [rains], we'll stay inside.
+    *'ll* is a modal.
+You should know that by now.
+    Base form after a modal: not finite.
+Close the door behind you.
+    An imperative: a base form, not a present tense form.
+This [is] Anna{'s} book.
+    Possessive *'s*.
+
+@from le_foll_2024
+It['s] ours.
+Who [does]n't love it?
+I [know].
+
+# Cases where the tools' rules differ.
+She [does] know the answer.
+    Emphatic *does* is a finite present form. MAT retags DO before a verb as an emphatic, so its rule misses it.
+I [insist] that he {be} told.
+    A subjunctive. Stanza's UD features mark it Tense=Pres, so the ud-feats rule counts it.
+She [has] to leave.
+    Finite present HAVE. MFTE replaces it with its necessity-modal tag, so its rule misses it.
+She [needs] to leave.
+    Finite present NEED. MFTE applies the same necessity-modal correction.
+
+# Reduced DO NOT KNOW.
+I [du]nno.
+    One present-tense auxiliary. MFTE's correction requires the three tokens *du n no*. The saved Stanza parse keeps *dunno* as one token tagged RB, so the correction does not run and the MFTE rule misses it.
+[Du]nno.
+    The same reduced auxiliary with an understood subject. The saved Stanza parse keeps *Dunno* as one token tagged UH. MFTE accepts capitalized *Du* when the three-token split is supplied.
+I [do]n't know.
+    The unreduced construction: *do* is present tense and *know* is a base form.
