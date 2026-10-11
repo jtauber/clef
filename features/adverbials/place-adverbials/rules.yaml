@@ -1,0 +1,17 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section B, no. 4, p. 224
+    match:
+      - cql: |
+          [form=$biber_1988/place-adverbials%c]
+    note: |
+      Reconstructs Biber's printed list as case-insensitive whole-word
+      matches. The entry specifies no POS or contextual condition, so this
+      rule adds none. Behaviour of the original tagging program has not
+      been verified.
+
+      The rule misses unlisted place adverbials such as *here* and *there*.
+      It also matches listed forms used as prepositions (*outside the
+      station*), adjectives (*the outside wall*), degree modifiers
+      (*far better*) or references to text (*see above*).

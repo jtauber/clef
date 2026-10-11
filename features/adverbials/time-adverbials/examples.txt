@@ -1,0 +1,28 @@
+They arrived [yesterday].
+We will return [tomorrow].
+She left [early] [today].
+    Two adverbial words count separately.
+[Afterwards], we went home.
+Try [again].
+    Again expresses repetition.
+I saw her [once].
+    Once expresses the number of occasions.
+The work will finish very [soon].
+    Only the time adverbial is marked; very modifies it.
+She is working [now].
+He had [previously] worked as a teacher.
+We can discuss it [later].
+They have [already] left.
+    Already is a time adverbial absent from Biber's list.
+We met [then].
+    Temporal then is absent from Biber's list.
+The {early} train was cancelled.
+    Early modifies a noun.
+{Tomorrow} is a holiday.
+    Tomorrow is the subject, not an adverbial.
+{Once} you arrive, call me.
+    Once introduces a temporal clause.
+We met on Monday.
+    The prepositional phrase expresses time but is outside this feature's scope.
+They worked all night.
+    The noun phrase expresses duration but is outside this feature's scope.

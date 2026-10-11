@@ -1,0 +1,29 @@
+They waited [outside].
+The children ran [upstairs].
+She works [abroad].
+We walked [uphill] and headed [north].
+[Nearby], a dog was barking.
+He stood just [behind].
+    Only the place adverbial is marked; just modifies it.
+She is [inside].
+    A locative complement of be counts.
+The boat drifted [away].
+The missing keys were [nowhere] to be found.
+We found shelter [here].
+    Here is a place adverbial absent from Biber's list.
+They stayed [there].
+    Locative there is absent from Biber's list.
+{There} is a problem.
+    Existential there has no place meaning.
+The {outside} wall needs painting.
+    Outside modifies a noun.
+They waited {outside} the station.
+    Outside introduces a prepositional phrase; the feature counts single-word adverbials.
+The {north} of England was covered in snow.
+    North is used nominally.
+This version is {far} better.
+    Far expresses degree here, not physical distance.
+See {above} for the calculation.
+    Above refers to a position in the text.
+We waited in the garden.
+    The prepositional phrase expresses place but is outside this feature's scope.

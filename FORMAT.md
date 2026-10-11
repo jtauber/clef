@@ -11,10 +11,16 @@ LICENSE                        CC BY-SA 4.0 licence text
 FORMAT.md                      this file
 references.bib                 every work cited
 lexicons/
+  biber_1988/place-adverbials.txt
+  biber_1988/time-adverbials.txt
   mat/indefinite-pronouns.txt
-  mfte/stative-verbs.txt       a word list belonging to a tool
+  mfte/stative-verbs.txt        a word list from a cited source
   mfte/hedges.txt
 features/
+  adverbials/
+    README.md
+    place-adverbials/           feature.md, rules.yaml, examples.txt
+    time-adverbials/            feature.md, rules.yaml, examples.txt
   verbs/                       a grouping of features
     README.md                  the group’s name and description
     past-tense/                a feature
@@ -192,7 +198,7 @@ Dependency patterns use [Stanford Semgrex](https://nlp.stanford.edu/software/tre
 
 ## 6. Lexicons
 
-Keep small grammatical inventories, such as `have|has|had|having`, and alternatives specific to one pattern inline. Put named lexical inventories in lexicon files, especially when they are long or reused. MAT's indefinite-pronoun list and MFTE's stative-verb and hedge lists are examples.
+Keep small grammatical inventories, such as `have|has|had|having`, and alternatives specific to one pattern inline. Put named lexical inventories in lexicon files, especially when they are long or reused. Biber's adverbial lists, MAT's indefinite-pronoun list and MFTE's stative-verb and hedge lists are examples.
 
 A lexicon is a plain-text file with one entry per line:
 
@@ -206,7 +212,7 @@ appears
 
 Comment lines of the form `# key: value` before the first entry are metadata. `title` says what the list is, `from` gives the citation key of its source, and `match` says which attribute the entries are (`form` or `lemma`). Entries are compared exactly, or ignoring case with `%c`, never as regular expressions.
 
-A list that belongs to a tool lives at `lexicons/<origin>/<name>.txt`, where the origin is the tool’s citation key, and is referred to as `$origin/name`.
+A list taken from a publication or tool lives at `lexicons/<origin>/<name>.txt`, where the origin is the source's citation key, and is referred to as `$origin/name`.
 
 ## 7. examples.txt
 

@@ -1,0 +1,45 @@
+# title: Place adverbials listed by Biber (1988, p. 224)
+# from: biber_1988
+# match: form
+aboard
+above
+abroad
+across
+ahead
+alongside
+around
+ashore
+astern
+away
+behind
+below
+beneath
+beside
+downhill
+downstairs
+downstream
+east
+far
+hereabouts
+indoors
+inland
+inshore
+inside
+locally
+near
+nearby
+north
+nowhere
+outdoors
+outside
+overboard
+overland
+overseas
+south
+underfoot
+underground
+underneath
+uphill
+upstairs
+upstream
+west

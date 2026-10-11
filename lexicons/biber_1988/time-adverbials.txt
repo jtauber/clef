@@ -1,0 +1,31 @@
+# title: Time adverbials listed by Biber (1988, p. 224)
+# from: biber_1988
+# match: form
+afterwards
+again
+earlier
+early
+eventually
+formerly
+immediately
+initially
+instantly
+late
+lately
+later
+momentarily
+now
+nowadays
+once
+originally
+presently
+previously
+recently
+shortly
+simultaneously
+soon
+subsequently
+today
+tomorrow
+tonight
+yesterday

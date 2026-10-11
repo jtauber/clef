@@ -1,0 +1,17 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section B, no. 5, p. 224
+    match:
+      - cql: |
+          [form=$biber_1988/time-adverbials%c]
+    note: |
+      Reconstructs Biber's printed list as case-insensitive whole-word
+      matches. The entry specifies no POS or contextual condition, so this
+      rule adds none. Behaviour of the original tagging program has not
+      been verified.
+
+      The rule misses unlisted time adverbials such as *already* and *then*.
+      It also matches listed forms used as adjectives (*the early train*),
+      nouns (*tomorrow is a holiday*), subordinators (*once you arrive*)
+      or discourse markers without a temporal meaning.
