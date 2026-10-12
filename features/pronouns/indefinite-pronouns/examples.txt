@@ -1,0 +1,38 @@
+Can [anybody] help?
+Has [anyone] called?
+I did not hear [anything].
+[Everybody] agreed.
+[Everyone] received a copy.
+[Everything] has changed.
+[Nobody] answered.
+[None] remained.
+[Nothing] happened.
+[Somebody] left a message.
+[Someone] called twice.
+[Something] moved behind the curtain.
+[No one] answered.
+    The two-word spelling is one occurrence, absent from Biber's list.
+[No-one] objected.
+[None] of the samples survived.
+[Some] stayed after the meeting.
+[Both] agreed to help.
+[Neither] was available.
+Did [any] survive?
+[Each] received a ticket.
+[Several] refused.
+[One] should check before leaving.
+    Generic one is absent from Biber's list.
+It must be [someone]'s bag.
+[Nobody]'s waiting outside.
+    Split tokens can match on nobody; a fused nobody's token is missed.
+They found {nowhere} to stay.
+    Locative nowhere is an adverb here, but Biber includes it in the printed list.
+They waited {somewhere} nearby.
+{Some} people left early.
+{Both} books were damaged.
+I bought {one} book.
+I prefer the red {one}.
+    Noun substitution is outside this feature's scope.
+He dismissed me as a {nobody}.
+The word "{nothing}" appears twice.
+She gave them the book.

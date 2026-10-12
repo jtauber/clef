@@ -1,0 +1,16 @@
+# title: Indefinite pronouns listed by Biber (1988, p. 226)
+# from: biber_1988
+# match: form
+anybody
+anyone
+anything
+everybody
+everyone
+everything
+nobody
+none
+nothing
+nowhere
+somebody
+someone
+something

@@ -1,0 +1,22 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C2, no. 9, pp. 225–226
+    match:
+      - cql: |
+          [form="it"%c]
+      - cql: |
+          [form="it['’](s|(ll|d)(['’]ve)?)"%c]
+    note: |
+      Interprets the entry as the form *it*, without a POS test. The source
+      does not give a token-level algorithm for this feature.
+
+      Common IT–auxiliary contractions are included by analogy with the
+      C1 rules. A separated *it* matches the base pattern; fused *it's*,
+      *it'll*, *it'd*, *it'll've* and *it'd've* match as one token. Straight
+      and curly apostrophes are accepted. Other contracted spellings and
+      tokenizations can be missed. This expansion is an interpretation;
+      the original tagging program's behaviour has not been verified.
+
+      Case-insensitive form matching also counts *IT* as an abbreviation
+      and mentions of the word *it*. Neither *its* nor *itself* matches.

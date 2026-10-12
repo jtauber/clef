@@ -1,0 +1,21 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C2, no. 11, p. 226
+    match:
+      - cql: |
+          [form=$biber_1988/indefinite-pronouns%c]
+    note: |
+      Reconstructs the printed inventory as case-insensitive whole-word
+      matches. The entry specifies no POS or contextual condition, so
+      this rule adds none. The original tagging program's behaviour has
+      not been verified.
+
+      The list includes *nowhere*, which overcounts locative uses against
+      CLEF's conventions. It omits *no one* and *no-one*, as well as
+      independent quantifiers such as *some*, *both* and generic *one*.
+      Noun uses such as *a nobody* and mentions of listed forms also match.
+
+      Split possessives and contractions match on the pronoun token.
+      Fused tokens such as *someone's* do not equal a list entry and are
+      missed. No additional contraction expansion is supplied here.

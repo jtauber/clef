@@ -1,0 +1,38 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C2, no. 10, p. 226; notation on pp. 222–223
+    match:
+      - cql: |
+          @[form="that|this|these|those"%c] [xpos="VB.*|MD" | form="who|whom|whose|which|and|[.!?:;-]"%c]
+      - cql: |
+          [form="that['’]s"%c]
+      - cql: |
+          @[form="that"%c] [form="['’]s"%c]
+    unless:
+      - cql: |
+          [form="that(['’]s)?"%c & xpos="WDT"]
+    note: |
+      Reconstructs (a) except for the following tone-unit boundary, and
+      (b), *that's*. V/AUX is approximated by Penn VB.* or MD. WHP uses
+      the source's four forms; *and* and the six CL-P punctuation forms
+      are matched literally. A comma is not CL-P. Other punctuation
+      spellings, such as an em dash, are not normalized here.
+
+      WDT on *that* approximates the exclusion of relative *that*. A
+      relative tagged otherwise can be counted. No general PRON test or
+      determiner/complementizer exclusion is added to the source's local
+      patterns, so non-pronominal uses can also match.
+
+      The separate *that's* patterns accept straight or curly apostrophes,
+      split or fused. Split auxiliary contractions can also satisfy the
+      first pattern through their POS tags; fused contractions other than
+      *that's* are not covered. The anchor is always the demonstrative,
+      not its auxiliary or following context.
+
+      Tone-unit boundaries are unavailable in the current format. The
+      tone-unit-final branch of (a) and the manually disambiguated
+      tone-unit-initial *that* in (c) are omitted, not replaced with
+      sentence boundaries. Consequently, some otherwise eligible uses
+      are missed. The original tagging program and manual decisions have
+      not been reproduced or verified.

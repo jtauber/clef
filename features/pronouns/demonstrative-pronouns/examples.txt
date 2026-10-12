@@ -1,0 +1,40 @@
+[This] works well.
+[That] was unexpected.
+[These] belong to Maya.
+[Those] have already arrived.
+I chose [this].
+Please take [that]!
+Did you want [these]?
+I chose [those]; you chose [these].
+Remember [this]: the gate closes at six.
+I chose [this] - the smaller of the two.
+I prefer [this] and [that].
+[Those] who stayed helped to tidy up.
+Choose [those] which fit the shelf.
+[That]'s ready.
+[That]’s already gone.
+[That]'ll help.
+    A fused that'll token is outside the reconstructed rule's contraction inventory.
+I prefer [these] to the older ones.
+    The following preposition does not satisfy the printed local contexts.
+I chose [those] near the door.
+Was [that] your first attempt?
+[That], I think, belongs to Maya.
+    Tone-unit information and manual disambiguation are not available to the rule.
+[That] I can understand.
+    A fronted object; the next token is a personal pronoun.
+Take [this], if you like.
+    A comma is not one of Biber's CL-P punctuation forms.
+[This]
+    An unpunctuated reply; there is no following token or tone-unit marker.
+{This} book is mine.
+{Those} three chairs are broken.
+The bag {that} broke was new.
+The bag {that}'s torn is mine.
+    Contracted is does not make relative that a demonstrative pronoun.
+I know {that} she left.
+I know {that} working late helps.
+    Complementizer that can match the rule when working is tagged as a verb.
+It was not {that} tall.
+The word "{that}" is printed here.
+She chose the smaller chair.
