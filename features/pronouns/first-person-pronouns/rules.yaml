@@ -1,0 +1,26 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C1, no. 6, p. 225
+    match:
+      - cql: |
+          [form="i|me|we|us|my|our|myself|ourselves"%c]
+      - cql: |
+          [form="i['’](m|ve|(ll|d)(['’]ve)?)|we['’](re|ve|(ll|d)(['’]ve)?)"%c]
+      - cql: |
+          [form="let['’]s"%c]
+      - cql: |
+          [form="let"%c] @[form="['’]s"%c]
+    note: |
+      The base pattern preserves the printed inventory. It misses *mine*
+      and *ours*.
+
+      Contractions are reconstructed as I/WE plus an auxiliary, including
+      *I'd've*, and US in *let's*. Both straight and curly apostrophes are
+      accepted. A separated pronoun matches the base pattern; fused forms
+      match as one token. With *let* followed by *'s*, the anchor is *'s*.
+      Other contracted spellings and tokenizations can be missed.
+
+      Matching ignores case and POS, so *US* as an abbreviation, *I* as a
+      numeral and mentions of these forms also match. The original tagging
+      program's behaviour has not been verified.

@@ -1,0 +1,21 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C1, no. 8, p. 225
+    match:
+      - cql: |
+          [form="she|he|they|her|him|them|his|their|himself|herself|themselves"%c]
+      - cql: |
+          [form="(he|she)['’](s|(ll|d)(['’]ve)?)|they['’](re|ve|(ll|d)(['’]ve)?)"%c]
+    note: |
+      The base pattern preserves the printed inventory. It misses *hers*,
+      *theirs* and *themself*.
+
+      Contractions are reconstructed as HE/SHE/THEY plus an auxiliary,
+      including *they'd've*. Both straight and curly apostrophes are
+      accepted. A separated pronoun matches the base pattern; fused forms
+      match as one token. Other contracted spellings and tokenizations
+      can be missed.
+
+      Matching ignores case and POS, so mentions of these word forms also
+      match. The original tagging program's behaviour has not been verified.

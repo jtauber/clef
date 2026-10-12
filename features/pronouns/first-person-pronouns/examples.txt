@@ -1,0 +1,23 @@
+[I] saw [myself] in the mirror.
+Give [me] a moment.
+[We] did it [ourselves].
+They invited [us].
+[My] notes are on [our] desk.
+[I]'m ready.
+[We]’ve finished.
+[I]'d have gone.
+[We]'ll return.
+[I]'d've helped.
+    Only the pronoun part is marked, even when the contraction is one token.
+Let['s] begin.
+    The contracted form represents us.
+This seat is [mine].
+    Mine is an independent possessive absent from Biber's list.
+The decision is [ours].
+    Ours is an independent possessive absent from Biber's list.
+The {US} delegation arrived.
+    US is an abbreviation, not a pronoun.
+The Roman numeral {I} is carved above the door.
+The word "{we}" occurs twice in the slogan.
+    A mention of the word form, not a use of the pronoun.
+She found your keys.

@@ -1,0 +1,19 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C1, no. 7, p. 225
+    match:
+      - cql: |
+          [form="you|your|yourself|yourselves"%c]
+      - cql: |
+          [form="you['’](re|ve|(ll|d)(['’]ve)?)"%c]
+    note: |
+      The base pattern preserves the printed inventory. It misses *yours*.
+
+      Contractions are reconstructed as YOU plus an auxiliary, including
+      *you'd've*. Both straight and curly apostrophes are accepted. A
+      separated pronoun matches the base pattern; fused forms match as one
+      token. Other contracted spellings and tokenizations can be missed.
+
+      Matching ignores case and POS, so mentions of these word forms also
+      match. The original tagging program's behaviour has not been verified.

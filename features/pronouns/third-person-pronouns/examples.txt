@@ -1,0 +1,29 @@
+[She] thanked [him].
+[He] gave [her] a map.
+[They] called [them].
+[His] coat matched [their] hats.
+[She] blamed [herself].
+[He] worked by [himself].
+[They] introduced [themselves].
+The blue coat is [his].
+This seat is [hers].
+    Hers is an independent possessive absent from Biber's list.
+These folders are [theirs].
+    Theirs is an independent possessive absent from Biber's list.
+[She]'s finished.
+[He]’ll call.
+[They]'re waiting.
+[They]’ve gone.
+[He]'d have helped.
+[They]'d've left by then.
+Alex said [they] were ready.
+    Singular they counts.
+Alex did it [themself].
+    Singular reflexive themself is absent from Biber's list.
+The ship lost [her] mast.
+    The referent need not be a person.
+{It} returned to {its} place by {itself}.
+    The it paradigm is outside this feature's scope.
+The word "{he}" is printed on the label.
+    A mention of the word form, not a use of the pronoun.
+You can ask me.

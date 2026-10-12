@@ -10,15 +10,18 @@ The forthcoming companion library `pyclef` will provide a Python engine that int
 
 ## This release
 
-Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first five of the 67 features in Biber (1988):
+Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first eight of the 67 features in Biber (1988):
 
 - Past tense
 - Perfect aspect
 - Present tense
 - Place adverbials
 - Time adverbials
+- First-person pronouns
+- Second-person pronouns
+- Third-person personal pronouns
 
-All five carry the `biber-1988` tag; coverage of that inventory is currently partial. The two adverbial features currently have Biber's lexical rules only.
+All eight carry the `biber-1988` tag; coverage of that inventory is currently partial. The adverbial and pronoun features currently have Biber rules only.
 
 More will follow, initially all from Biber, a few at a time.
 
