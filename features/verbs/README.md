@@ -1,3 +1,3 @@
 # Verbs
 
-Tense, aspect, voice and mood: features of the verb phrase.
+Features of verbs and verb phrases, including tense, aspect, voice, mood and verbal substitution.

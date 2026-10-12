@@ -1,0 +1,53 @@
+Lee feeds the birds, and Kim [does] too.
+I watered the plants, and Maya [did] as well.
+Lee walks to work, but I [do] not.
+Lee walks to work, but I [do]n't.
+Sam likes coffee, but Kim [does]n’t.
+I went yesterday, but he [did]n't.
+You can reset the router, and I suggest [doing] so now.
+She promised to phone and has [done] so.
+I forgot to sign the form, so I will [do] it now.
+They moved the desk, and we can [do] the same.
+I could open the window. Please [do].
+Open the gate. [Do] it now.
+She thinks I rang the bell, and I may have [done].
+    Bare done can substitute for the earlier predicate in British English.
+They jog every morning, and so [do] I.
+Lee sings more often than I [do].
+Someone rang the bell. Who [did] it?
+    Main-verb substitution inside a question; Biber's WHP exclusion misses it.
+I can open the window. Yes, [do].
+    The comma triggers the preceding-punctuation exclusion.
+She promised to leave; [do] the same.
+    The semicolon triggers the preceding-punctuation exclusion.
+She {does} the accounts.
+    Ordinary lexical do, not substitution for an action supplied by context.
+He {did} the washing up.
+The {does} and their fawns sheltered beside the fence.
+    A plural noun referring to female deer.
+The noun "{do}" can mean a party.
+I am {done} with this job.
+    Adjectival done meaning finished.
+We {do} know the answer.
+We {do} not know the answer.
+We {do}n't really know the answer.
+    Split n't belongs to the negative DO form, leaving one optional adverb.
+We {do} not really know the answer.
+    Two adverbs exceed the printed exclusion's window.
+We {do} very rarely leave early.
+    The auxiliary is separated from leave by two adverbs.
+{Do} you agree?
+    The omitted tone-unit exclusion can leave an initial question auxiliary counted.
+Why {did} she leave?
+    Why is in Biber's WHO category, not the WHP category used in this exclusion.
+Whom {did} you invite?
+I asked, {did} they agree?
+She left, {did}n't she?
+    Question tags are auxiliary uses under CLEF's conventions.
+She left. {Did} you?
+    An elliptical question auxiliary; punctuation in the previous sentence is unavailable.
+{Did} you [do] it?
+    The question auxiliary does not count; the second do substitutes for an action.
+We {do} [do] that when the price falls.
+    Emphatic auxiliary followed by a pro-verb: only the second do counts.
+The package arrived yesterday.

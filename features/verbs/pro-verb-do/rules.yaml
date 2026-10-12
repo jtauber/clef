@@ -1,0 +1,43 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section C3, no. 12, p. 226; notation on pp. 222–223
+    match:
+      - cql: |
+          [form="do|does|did|doing|done|don['’]t|doesn['’]t|didn['’]t"%c]
+    unless:
+      - cql: |
+          @[form="do|does|did|doing|done|don['’]t|doesn['’]t|didn['’]t"%c] [xpos="RB.*"]{0,1} [xpos="VB.*"]
+      - cql: |
+          @[form="do|does|did"%c] [form="n['’]t"%c] [xpos="RB.*"]{0,1} [xpos="VB.*"]
+      - cql: |
+          [form="who|whom|whose|which|[.!?:;,-]"%c] @[form="do|does|did|doing|done|don['’]t|doesn['’]t|didn['’]t"%c]
+    note: |
+      Matches Biber's eight DO forms, ignoring case and accepting straight
+      or curly apostrophes. No POS condition is added to the DO inventory.
+      Nominal *do* and *does*, adjectival *done*, and word mentions can
+      therefore match, as can ordinary lexical uses such as *do the accounts*.
+
+      The first exclusion reconstructs DO + (ADV) + V, using Penn RB.* for
+      ADV and VB.* for V. It allows zero or one adverb, not an arbitrary
+      gap. Longer gaps can leave auxiliary DO counted as a pro-verb.
+
+      The second exclusion handles a listed negative DO form split into
+      *do/does/did* and *n't*. The negative clitic does not consume the
+      optional ADV position: split *don't really know* is excluded just
+      like fused *don't really know*. Uncontracted *do not really know*
+      has two intervening adverbs and is not excluded. This tokenization
+      treatment is a reconstruction choice; other splits and spellings
+      may not be covered. All patterns anchor on DO, never on the negator.
+
+      The last exclusion uses the four WHP forms and seven ALL-P punctuation
+      forms literally. WHO words such as *what* and *why* are not added.
+      Quotes and em dashes are not normalized to ALL-P. The exclusion can
+      remove genuine pro-verbs, as in *who did it* or *yes, do*.
+
+      The preceding tone-unit boundary alternative is omitted. It is not
+      replaced by sentence start, and punctuation in the preceding sentence
+      cannot supply context under FORMAT's sentence-local matching. This
+      can leave initial question auxiliaries counted. The original tagging
+      program, its categories and its tone-unit input have not been reproduced
+      or verified.
