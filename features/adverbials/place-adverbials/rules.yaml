@@ -21,10 +21,10 @@ rules:
     at: Tagger_MAT.pl, tags indefinite pronouns; tags place adverbials
     match:
       - cql: |
-          [form=$mat/place-adverbials%c]
+          [form=".*\b${mat/place-adverbials}(_.*)?"%c]
     unless:
       - cql: |
-          [xpos="NNP.*" & form!="nowhere"%c]
+          [xpos="NNP.*" & form!=".*\bnowhere(_.*)?"%c]
     note: |
       MAT 1.3.2 uses the same 42 forms as Biber's printed list, ignoring
       case, but excludes tags beginning NNP (NNP and NNPS). Its earlier
@@ -36,8 +36,21 @@ rules:
       distinguish spatial uses from prepositional, adjectival, nominal,
       degree or textual uses. Unlisted *here* and *there* are missed.
 
-      This reconstruction matches whole token forms on supplied Penn
-      annotations. MAT searches for a word boundary inside word_TAG
-      strings, so it can also match a listed suffix of a single token
-      such as *north-west*. That substring behaviour and MAT's tagger and
-      text preprocessing are not reproduced.
+      MAT combines each word and its tag into a word_TAG string, then
+      searches for a listed form at a word boundary followed by an
+      underscore. For example, it finds *west_* in *north-west_RB*.
+      CLEF keeps form and xpos separate, so the CQL pattern matches
+      *west* at the end of the form *north-west*. The whole token
+      supplies one anchor. Letters, digits and underscores do not
+      create a boundary before a listed form.
+
+      MAT can also find *west_* in *west_extra_RB*, where that underscore
+      is part of the supplied form *west_extra*. The optional `(_.*)?`
+      reproduces this case by matching the literal suffix *_extra* in
+      form. It does not match MAT's separator or the POS tag, and is
+      unused for *north-west*.
+
+      The *nowhere* exception uses the same boundary matching, so a
+      single *north-nowhere* token can count even when tagged NNP. MAT's
+      tagger, text preprocessing and other earlier retagging are not
+      fully reproduced.

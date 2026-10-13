@@ -21,16 +21,27 @@ rules:
     at: Tagger_MAT.pl, tags time adverbials; tags discourse particles
     match:
       - cql: |
-          [form=$mat/time-adverbials%c]
+          [form=".*\b${mat/time-adverbials}(_.*)?"%c]
     unless:
       - cql: |
-          @[form="soon"%c] [form="as"%c]
+          @[form=".*\bsoon(_.*)?"%c & form!=".*\b(?!soon(?:_|$))${mat/time-adverbials}(_.*)?"%c] [form=".*\bas(_.*)?"%c]
       - cql: |
-          [xpos="\W.*"] @[form="now"%c]
+          [xpos="\W.*"] @[form=".*\bnow(_.*)?"%c]
     note: |
       MAT 1.3.2 uses Biber's 28 forms plus *to-day*, *to-morrow* and
       *to-night*, ignoring case and without requiring an adverb tag.
-      Hyphenated forms match only when supplied as one token.
+      MAT combines each word and its tag into a word_TAG string, then
+      searches for a listed form at a word boundary followed by an
+      underscore. For example, it finds *now_* in *right-now_RB*.
+      CLEF keeps form and xpos separate, so the CQL pattern matches
+      *now* at the end of the form *right-now*.
+
+      MAT can also find *now_* in *now_extra_RB*, where that underscore
+      is part of the supplied form *now_extra*. The optional `(_.*)?`
+      reproduces this case by matching the literal suffix *_extra* in
+      form. It does not match MAT's separator or the POS tag, and is
+      unused for *right-now*.
+      A matched token supplies one anchor, even with multiple matches.
 
       It excludes *soon* immediately followed by *as*, regardless of the
       preceding word or either token's POS tag. Its later discourse-
@@ -38,6 +49,11 @@ rules:
       with a non-word character, including ordinary Penn punctuation
       tags. The second exclusion reconstructs that pass using the
       supplied tag. It can exclude genuinely temporal *now* after a comma.
+      Both exclusions use MAT's word-boundary matching: *very-soon* before
+      *such-as* is excluded, and *right-now* after punctuation is excluded.
+      The *soon* exclusion preserves a detection from another listed
+      form in the same token, which MAT's earlier time-adverbial check
+      can already have tagged TIME.
 
       Patterns stay within the supplied sentence. They do not reproduce
       MAT's use of the preceding sentence's punctuation, or its Perl
@@ -46,9 +62,8 @@ rules:
       *Now* is left counted here, but MAT retags it DPAR when the input
       ends in punctuation.
 
-      Whole-token matching also omits MAT's word-boundary substring
-      matches inside word_TAG strings, such as *right-now* supplied as
-      one token. MAT's tagger and text preprocessing are not reproduced.
+      MAT's tagger, text preprocessing and other earlier retagging are
+      not fully reproduced.
       As with Biber's rule, unlisted *already* and *then* are missed, while
       listed words can count in nominal, adjectival or clause-introducing
       uses.

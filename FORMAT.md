@@ -186,6 +186,18 @@ Token patterns use a subset of the [CQP](https://cwb.sourceforge.io/files/CQP_Ma
 - Matching is case-sensitive unless `%c` is given.
 - Parentheses can group token sequences. `*` repeats a token or group zero or more times, with no fixed upper limit.
 - `$origin/name` matches if the attribute equals any entry of the lexicon `lexicons/origin/name.txt` (with `%c`, ignoring case).
+- Within a quoted CQL regular expression, `${origin/name}` inserts a non-capturing group of literal lexicon alternatives. Entries are escaped, so punctuation in them retains its literal meaning. The reference must match the attribute named in the lexicon metadata and must occur outside a character class. Escape the dollar sign to match a literal `${...}` string. The complete expression still matches the whole attribute value, and `%c` applies to the complete expression.
+
+For example, `[form=".*\b${mat/place-adverbials}(_.*)?"%c]` matches a listed place adverbial at a word boundary within the token. The optional ending `(_.*)?` allows a literal underscore followed by zero or more characters. An underscore has no special meaning in CQL. Here it matches a character in `form`; CLEF keeps the word form and its POS tag in separate attributes.
+
+That optional ending reproduces a detail of MAT's matching. MAT combines each word and its tag into a string such as `west_RB`, then searches for patterns such as `\bwest_`. The underscore it finds can be either the separator before the tag or an underscore already inside the word form:
+
+| CLEF `form` (with `xpos="RB"`) | MAT's combined string | What `(_.*)?` matches in CLEF |
+|---|---|---|
+| `north-west` | `north-west_RB` | Nothing: `west` is at the end of `form`. |
+| `west_extra` | `west_extra_RB` | `_extra`, which is part of `form`. |
+
+The first case would match without `(_.*)?`; the second needs it to reproduce MAT's behaviour on a supplied form containing an underscore. In both cases, the whole token is the anchor.
 
 ### 5.3 Semgrex
 
@@ -215,7 +227,7 @@ appear
 appears
 ```
 
-Comment lines of the form `# key: value` before the first entry are metadata. `title` says what the list is, `from` gives the citation key of its source, and `match` says which attribute the entries are (`form` or `lemma`). Entries are compared exactly, or ignoring case with `%c`, never as regular expressions.
+Comment lines of the form `# key: value` before the first entry are metadata. `title` says what the list is, `from` gives the citation key of its source, and `match` says which attribute the entries are (`form` or `lemma`). Entries are literal strings, never regular expressions. A standalone `$origin/name` reference compares the whole attribute exactly, or ignoring case with `%c`. Inside a quoted CQL regular expression, `${origin/name}` supplies escaped literal alternatives; the surrounding expression determines where they can match.
 
 A list taken from a publication or tool lives at `lexicons/<origin>/<name>.txt`, where the origin is the source's citation key, and is referred to as `$origin/name`.
 
