@@ -19,3 +19,32 @@ rules:
       Split possessives and contractions match on the pronoun token.
       Fused tokens such as *someone's* do not equal a list entry and are
       missed. No additional contraction expansion is supplied here.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, tags indefinite pronouns; tags quantifier pronouns; tags place adverbials
+    match:
+      - cql: |
+          [form=".*\b${mat/indefinite-pronouns}(_.*)?"%c & xpos="\w.*"]
+    unless:
+      - cql: |
+          [form=".*\b${mat/quantifier-pronouns}(_.*)?"%c]
+      - cql: |
+          [form=".*\bnowhere(_.*)?"%c]
+    note: |
+      MAT 1.3.2 initially marks all thirteen listed forms INPR, then replaces
+      nine with QUPR and later replaces *nowhere* with PLACE. Its reported
+      indefinite-pronoun category counts INPR, not QUPR. Ordinary tokens
+      therefore leave only *nobody*, *none* and *nothing* in this category.
+      These omissions reproduce MAT's output rather than correcting it.
+
+      Matching is case-insensitive and does not require a pronoun tag.
+      It retains MAT's word-boundary search before the listed form and
+      accepts an underscore suffix in form, as in the other MAT lexical
+      rules. The xpos condition requires a tag MAT can replace. Split
+      possessives and contractions match on the pronoun; fused forms do
+      not. Unlisted independent quantifiers and *no one* are missed,
+      while noun uses and word mentions can count.
+
+      MAT's tagger, raw-text preprocessing, and retagging interactions
+      involving unusual multi-form tokens are not fully reproduced.

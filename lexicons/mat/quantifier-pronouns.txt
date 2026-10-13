@@ -1,0 +1,12 @@
+# title: Quantifier-pronoun forms retagged QUPR by MAT 1.3.2
+# from: mat
+# match: form
+anybody
+anyone
+anything
+everybody
+everyone
+everything
+somebody
+someone
+something

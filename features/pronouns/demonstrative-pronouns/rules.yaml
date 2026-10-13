@@ -36,3 +36,85 @@ rules:
       sentence boundaries. Consequently, some otherwise eligible uses
       are missed. The original tagging program and manual decisions have
       not been reproduced or verified.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, tags that complements and relatives; tags demonstrative pronouns
+    match:
+      - cql: |
+          @[form=".*\b(that|this|these|those)(_.*)?"%c & xpos="\w.*"]
+          [xpos="V.*|MD.*|\W.*" | form=".*\b(do|does|did|doing|done|have|has|'ve|had|having|hath|be|am|is|are|was|were|been|being|m|re|who|whom|whose|which|and)(_.*)?"%c | (form=".*\bs(_.*)?"%c & xpos="VBZ.*")]
+      # MAT's second branch is case-sensitive and overrides earlier tags.
+      - cql: |
+          @[form=".*\bthat(_.*)?"%c & xpos="\w.*"] [form=".*('s|is)(_.*)?"]
+    unless:
+      # Earlier adjective-complement and subject-relative passes block DEMP,
+      # except where the separate THAT + 's/is branch restores it.
+      - cql: |
+          [xpos="JJ.*|PRED.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns}|${mat/emphatics})(_.*)?"%c]
+          @[form=".*\bthat(_.*)?"%c]
+          [form!=".*('s|is)(_.*)?"]
+      - cql: |
+          [xpos="N.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns}|${mat/emphatics})(_.*)?"%c]
+          @[form=".*\bthat(_.*)?"%c]
+          [form!=".*('s|is)(_.*)?" & (xpos="V.*|MD.*" | form=".*\b(do|does|did|doing|done|have|has|'ve|had|having|hath|be|am|is|are|was|were|been|being|m|re)(_.*)?"%c | (form=".*\bs(_.*)?"%c & xpos="VBZ.*"))]
+      # Verb-complement tags also prevent the general demonstrative branch.
+      - cql: |
+          [xpos="V.*" & form=".*\b(${mat/complement-verbs}|seem|seems|seemed|seeming|appear|appears|appeared|appearing)(_.*)?"%c]
+          @[form=".*\bthat(_.*)?"%c]
+          [form!=".*('s|is)(_.*)?" & xpos!="V.*|MD.*|\W.*" & form!=".*\b(do|does|did|doing|done|have|has|'ve|had|having|hath|be|am|is|are|was|were|been|being|m|re|and)(_.*)?"%c & (form!=".*\bs(_.*)?"%c | xpos!="VBZ.*")]
+      - cql: |
+          [xpos="V.*" & form=".*\b${mat/complement-verbs}(_.*)?"%c]
+          [xpos="PIN.*" | form=".*\b(${mat/prepositions}|to)(_.*)?"%c]
+          [xpos!="N.*"]{1,3}
+          [xpos="N.*"]
+          @[form=".*\bthat(_.*)?"%c]
+          [form!=".*('s|is)(_.*)?"]
+      # SUCH THAT and qualifying SO THAT are retagged before DEMP.
+      - cql: |
+          [form=".*\bsuch(_.*)?"%c]
+          @[form=".*\bthat(_.*)?"%c]
+          [form!=".*('s|is)(_.*)?"]
+      - cql: |
+          [form=".*\bso(_.*)?"%c]
+          @[form=".*\bthat(_.*)?"%c]
+          [xpos!="NN.*|JJ.*" & form!=".*('s|is)(_.*)?"]
+    note: |
+      MAT 1.3.2 looks for THAT, THIS, THESE or THOSE before a verb, modal,
+      one of its DO/HAVE/BE forms, punctuation, WHO/WHOM/WHOSE/WHICH or AND.
+      Punctuation is determined by a tag beginning with a non-word character;
+      this includes commas and Penn quote tags. No demonstrative POS test
+      is required. An unpunctuated final demonstrative has no right context
+      and is missed.
+
+      Earlier tags for THAT complements and relatives can block DEMP. The
+      exclusion reconstructs the immediately preceding adjective and noun
+      contexts, accounting for the basic lexical retagging shown in its
+      exceptions. It also reconstructs the verb-complement paths after
+      MAT's public/private/suasive verbs or SEEM/APPEAR, including a short
+      intervening prepositional phrase, and the earlier NULL retagging in
+      SUCH THAT and qualifying SO THAT. The complement-verb lexicon is the
+      union of MAT's three verb-form inventories; SEEM/APPEAR is added only
+      in the adjacent-verb branch, as in the source.
+
+      These are local reconstructions of selected earlier passes, not a
+      simulation of all intermediate tags. The longer complement pattern
+      uses supplied noun tags and approximates PIN with MAT's preposition
+      list and TO. Other retagging can change those tests. The following
+      token's verb/modal test likewise uses its input tag, so a word that
+      MAT retags out of that category can still supply context here.
+      Object-relative and other complement paths can interact with these
+      cases; they are not all reconstructed.
+
+      MAT separately marks THAT before a following token ending in
+      straight-apostrophe *'s* or lowercase *is*. This branch
+      overrides even a previous relative or complement tag. Its test has
+      no initial word boundary and is case-sensitive; *this* therefore
+      satisfies it, while *IS* and curly-apostrophe *’s* do not. The general
+      verb branch can still accept those tokens by POS. A fused *that's*
+      token is not expanded by this tagging pass.
+
+      Listed forms otherwise use case-insensitive word-boundary matching,
+      including an optional underscore suffix in the supplied form. MAT's
+      tagger, raw-text preprocessing, cross-sentence context and negative
+      array-index lookups are not reproduced.

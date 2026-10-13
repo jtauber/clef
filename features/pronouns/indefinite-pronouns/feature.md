@@ -21,3 +21,5 @@ Pronouns that express an indefinite person, thing or quantity without an accompa
 Feature 11 in [@biber_1988, p. 226]. The printed list is stored in `lexicons/biber_1988/indefinite-pronouns.txt`. Its entry *nowhere* is preserved there even though locative uses are outside CLEF's conventions for this feature.
 
 The biber rule uses the listed forms without a POS test. It misses *no one* and unlisted independent quantifiers, and can count noun uses and mentions. It also misses possessives and contractions when they are kept as one token with the pronoun.
+
+MAT initially retags the same thirteen forms as INPR, but then moves nine to QUPR and *nowhere* to PLACE. Its reported INPR category therefore ordinarily retains only *nobody*, *none* and *nothing*. The MAT reconstruction preserves this sequence of exclusions. The original and later quantifier-pronoun inventories are stored separately under `lexicons/mat/`; QUPR is not silently added back into INPR.

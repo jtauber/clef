@@ -22,3 +22,5 @@ Feature 10 in [@biber_1988, p. 226]. This is distinct from Biber's feature 51, w
 The biber rule reconstructs the automatic contexts that can be expressed with the current annotation layers. It uses Penn verb and modal tags for the following verb or auxiliary, and WDT as a proxy for relative *that*. It handles the separately listed *that's* in fused or split form.
 
 Biber's tone-unit conditions and manual disambiguation are not implemented. A sentence boundary is not a substitute for a tone-unit boundary. The rule can therefore miss pronouns before intervening material or at the end of an unpunctuated utterance. It can also count non-pronominal *that* when the following token satisfies a pattern; its success depends partly on the supplied tags.
+
+The MAT reconstruction uses local following-token tests, including commas and quotes, and selected earlier complement/relative exclusions. It also preserves MAT's separate THAT + lowercase *is* or straight-apostrophe *'s* branch, which can override those exclusions and count relative *that*. The rule notes describe the case-sensitive suffix test, tokenization limits and earlier retagging not fully reconstructed.

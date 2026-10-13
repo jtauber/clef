@@ -1,0 +1,42 @@
+# title: Preposition forms retagged by MAT 1.3.2
+# from: mat
+# match: form
+against
+amid
+amidst
+among
+amongst
+at
+besides
+between
+by
+despite
+during
+except
+for
+from
+in
+into
+minus
+notwithstanding
+of
+off
+on
+onto
+opposite
+out
+per
+plus
+pro
+than
+through
+throughout
+thru
+toward
+towards
+upon
+versus
+via
+with
+within
+without

@@ -22,3 +22,5 @@ Personal-pronoun forms in the *he*, *she* and *they* paradigms, including posses
 Feature 8 in [@biber_1988, p. 225]. The printed inventory omits *hers*, *theirs* and *themself*, which count under CLEF's conventions. Biber places the separate *it* feature in C2.
 
 The biber rule uses word forms without a POS test. It recognises the pronoun as a separate token or fused with common contracted auxiliaries. It cannot distinguish a use of a pronoun from a mention of its word form.
+
+The MAT reconstruction uses the same eleven base forms, retaining the omissions of *hers*, *theirs* and *themself*. It uses MAT's word-boundary matching without a pronoun-tag test. Split HE/SHE/THEY contractions count on the pronoun; fused contractions are not expanded by this tagging pass.

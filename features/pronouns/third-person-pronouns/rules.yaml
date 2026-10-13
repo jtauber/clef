@@ -19,3 +19,26 @@ rules:
 
       Matching ignores case and POS, so mentions of these word forms also
       match. The original tagging program's behaviour has not been verified.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, tags third person pronouns
+    match:
+      - cql: |
+          [form=".*\b(she|he|they|her|him|them|his|their|himself|herself|themselves)(_.*)?"%c & xpos="\w.*"]
+    note: |
+      Uses MAT's eleven forms without requiring a pronoun tag. *Hers*,
+      *theirs* and *themself* are absent. Split HE/SHE/THEY contractions
+      match on the pronoun; fused contractions are not expanded by this
+      tagging pass. IT, ITS and ITSELF belong to MAT's separate PIT category.
+
+      MAT 1.3.2 searches case-insensitively for a listed form at a word
+      boundary followed by an underscore in its word_TAG string. The
+      pattern preserves matches such as *not-me*, and accepts an
+      underscore suffix in the supplied form. The xpos condition only
+      requires a tag that MAT can replace; it is not a grammatical filter.
+      Homographs and word mentions can therefore count.
+
+      MAT's tagger and raw-text preprocessing are not reproduced. Earlier
+      retagging and interactions between several listed forms inside one
+      supplied token are not fully represented. Each token has one anchor.

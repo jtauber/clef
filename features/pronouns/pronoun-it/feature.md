@@ -20,3 +20,5 @@ The pronoun *it*, whether it refers to an entity or situation or serves a gramma
 Feature 9 in [@biber_1988, pp. 225–226]. CLEF treats this as the form *it*, rather than the whole *it* paradigm.
 
 The entry gives no token-level algorithm. The biber rule reconstructs it through case-insensitive form matching, with common auxiliary contractions handled as in the C1 rules. It does not distinguish pronouns from abbreviations or mentions of the word form.
+
+MAT's PIT category covers *it*, *its* and *itself*. The MAT rule preserves that broader inventory even though the latter two are outside CLEF's conventions. Its case-insensitive word-boundary matching does not distinguish pronouns from abbreviations or word mentions; split contractions count, but fused forms are not expanded here.

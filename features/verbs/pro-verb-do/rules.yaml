@@ -41,3 +41,59 @@ rules:
       can leave initial question auxiliaries counted. The original tagging
       program, its categories and its tone-unit input have not been reproduced
       or verified.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, basic tags needed for complex tags; tags pro-verb do
+    match:
+      - cql: |
+          [form=".*\b(do|does|did|doing|done)(_.*)?"%c & xpos="\w.*"]
+    unless:
+      # These are independent vetoes in MAT, not optional-adverb paths.
+      - cql: |
+          @[form=".*\b(do|does|did|doing|done)(_.*)?"%c]
+          []{0,2}
+          [xpos="V.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns})(_.*)?"%c]
+      - cql: |
+          @[form=".*\b(do|does|did|doing|done)(_.*)?"%c]
+          [xpos="RB.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns})(_.*)?"%c]
+      - cql: |
+          @[form=".*\b(do|does|did|doing|done)(_.*)?"%c]
+          []
+          [xpos="RB.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns}|not|n't)(_.*)?"%c]
+      - cql: |
+          @[form=".*\b(do|does|did|doing|done)(_.*)?"%c] [xpos="XX0.*"]
+      - cql: |
+          [xpos="\W.*" | form=".*\b(who|whom|whose|which|what|where|when|how|whether|why|whoever|whomever|whichever|wherever|whenever|whatever|however)(_.*)?"%c]
+          @[form=".*\b(do|does|did|doing|done)(_.*)?"%c]
+    note: |
+      MAT 1.3.2 tests its five DO forms without requiring a verb tag. It
+      adds PROD only if none of its local vetoes applies: a verb among the
+      next three tokens; an RB adverb among the next two; an immediately
+      following XX0 negator; or preceding punctuation or a listed WH word.
+      The source combines these conditions with AND. They are not three
+      alternative paths allowing zero, one or two adverbs before a verb.
+      As a result, *does too* and *did as well* can be missed even with no
+      following verb. Lexical and nominal DO can still count.
+
+      The lookahead uses tags after MAT's basic retagging. Prepositions,
+      quantifiers and indefinite pronouns have already lost their input
+      verb/adverb tags; the lexical exceptions preserve that behaviour.
+      RB-tagged *not* and straight-apostrophe *n't* become XX0. The RB
+      exclusions distinguish those positions: XX0 is rejected immediately
+      after DO, but not two tokens later. Thus *I do it not* can count,
+      whereas *I do it often* cannot. Other earlier contextual retagging
+      is not fully reproduced.
+
+      All lexical tests preserve MAT's case-insensitive word-boundary
+      matching in word_TAG strings. A split negative contraction retains
+      a DO candidate, usually excluded by its following negator. A fused
+      *don't* is not in MAT's DO inventory. Curly apostrophes are not
+      normalized, though an RB-tagged *n’t* still triggers the RB veto.
+
+      Patterns stay within the supplied sentence. They do not reproduce
+      MAT's cross-sentence lookahead or its negative array-index lookup
+      at the start of an input, which reads the final token as previous
+      context. Initial DO can consequently count here when MAT excludes
+      it because the input ends in punctuation or a WH word. The source's
+      tagger and raw-text preprocessing are also outside this rule.

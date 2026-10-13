@@ -20,3 +20,26 @@ rules:
 
       Case-insensitive form matching also counts *IT* as an abbreviation
       and mentions of the word *it*. Neither *its* nor *itself* matches.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, tags pronoun it
+    match:
+      - cql: |
+          [form=".*\b(it|its|itself)(_.*)?"%c & xpos="\w.*"]
+    note: |
+      MAT's PIT category includes *it*, *its* and *itself*, so the latter
+      two count against CLEF's narrower convention. No pronoun-tag test
+      distinguishes *IT support* or mentions of the word. Split IT
+      contractions match; fused contractions are not expanded here.
+
+      MAT 1.3.2 searches case-insensitively for a listed form at a word
+      boundary followed by an underscore in its word_TAG string. The
+      pattern preserves matches such as *not-me*, and accepts an
+      underscore suffix in the supplied form. The xpos condition only
+      requires a tag that MAT can replace; it is not a grammatical filter.
+      Homographs and word mentions can therefore count.
+
+      MAT's tagger and raw-text preprocessing are not reproduced. Earlier
+      retagging and interactions between several listed forms inside one
+      supplied token are not fully represented. Each token has one anchor.

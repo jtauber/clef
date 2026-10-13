@@ -16,3 +16,10 @@ This seat is [yours].
 The word "{you}" occurs twice in the slogan.
     A mention of the word form, not a use of the pronoun.
 Our team won.
+
+[Thou] hast done [thy] duty.
+    Archaic second-person forms included in MAT's inventory.
+I shall speak to [thee].
+Know [thyself].
+[Thine] is the greater task.
+    An independent possessive absent from both Biber's and MAT's inventories.
