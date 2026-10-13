@@ -1,6 +1,7 @@
 ---
 tags: [voice]
 unit: passive predication
+subsumed_by: [passives]
 ---
 # GET passives
 

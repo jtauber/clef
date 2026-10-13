@@ -1,6 +1,7 @@
 ---
 tags: [contraction, aspect]
 unit: contracted perfect auxiliary
+subsumed_by: [past-tense]
 ---
 # Contracted perfect HAD
 

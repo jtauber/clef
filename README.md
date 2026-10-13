@@ -27,11 +27,13 @@ Work is considerably further along privately but, for initial feedback, I have r
 
 All twelve carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber and MAT rules; the pronoun and pro-verb features currently have Biber rules only.
 
-Further Biber features will follow, a few at a time. The catalogue also includes five features used by the contextual past-tense rule: contracted perfect HAD, BE passives, GET passives, possessive and obligation HAVE GOT, and HAVE/NEED TO. They have their own definitions and examples; they do not extend the stated coverage of the Biber inventory.
+Further Biber features will follow, a few at a time. The catalogue also includes five features used by the contextual past-tense rule: contracted perfect HAD, BE passives, GET passives, possessive and obligation HAVE GOT, and HAVE/NEED TO. They have their own definitions and examples. A broader passive feature brings BE and GET passives together. These additions do not extend the stated coverage of the Biber inventory.
 
 Each feature is a directory under `features/` with its definition, the rules that detect it, and examples. [FORMAT.md](FORMAT.md) describes how the files are written.
 
 Past tense also has a `contextual` rule alongside the `mfte` reconstruction. It references contextual rules belonging to six other features, including the existing perfect-aspect feature. Rules can reuse one another through `use: feature-id/rule-id`; each still detects and is evaluated against its own feature. The contextual rules are CLEF proposals. MFTE's influence and deliberate departures from its implementation are documented in their notes.
+
+Features can declare strictly broader features with `subsumed_by` in their definitions. BE and GET passives are subsumed by passives; contracted perfect HAD is subsumed by past tense. These relationships describe feature occurrences independently of detection rules. The validation report presents their transitive reduction as a Hasse diagram.
 
 ## Validation
 

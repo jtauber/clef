@@ -1,0 +1,9 @@
+rules:
+  - id: contextual
+    match:
+      - use: be-passives/contextual
+      - use: get-passives/contextual
+    note: |
+      Combine the contextual BE-passive and GET-passive detections. Shared
+      anchors count once. This rule retains the component rules' limitations;
+      their false positives are not part of the feature definition.

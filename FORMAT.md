@@ -54,7 +54,8 @@ Finite verbs in past tense form.
 [@biber_1988, p. 223] defines past tense through his tagger.
 ```
 
-- The **front matter** (YAML between `---` lines) holds two keys. `tags` is a list of facets for browsing: linguistic categories (`tense`, `aspect`) and membership in source inventories (`biber-1988`). `unit` says what one occurrence is: a `finite verb form`, a `perfect verb phrase`.
+- The **front matter** (YAML between `---` lines) requires `tags` and `unit`, and optionally accepts `subsumed_by`. `tags` is a list of facets for browsing: linguistic categories (`tense`, `aspect`) and membership in source inventories (`biber-1988`). `unit` says what one occurrence is: a `finite verb form`, a `perfect verb phrase`.
+- `subsumed_by`, when present, is a list of ids of strictly broader features (section 3.1). It is independent of tags and rule references.
 - The first line of the body is `# Name`: the feature’s **name**.
 - The first paragraph after the name is the **definition**. It must stand alone: someone who has never met the feature should be able to recognise an occurrence from it.
 - `## Conventions` is a bullet list of the decisions that affect what counts: borderline cases, contractions, senses left out. Each bullet is one decision. Explanation goes in the notes.
@@ -65,6 +66,31 @@ The `biber-1988` tag identifies membership in Biber’s inventory [@biber_1988].
 Citations use Pandoc’s syntax: `[@biber_1988]`, `[@biber_1988, p. 223]`. The key must be in `references.bib`.
 
 A feature’s value for a text is the number of its occurrences.
+
+### 3.1 Feature subsumption
+
+A feature may declare that its occurrences are a proper subset of those of another feature:
+
+```yaml
+# In be-passives/feature.md
+---
+tags: [voice]
+unit: passive predication
+subsumed_by: [passives]
+---
+```
+
+`subsumed_by` lists feature ids, not group names, tags or rule ids. Omit it, or use an empty list, when no broader relationship is declared. An omission leaves the relationship unspecified; it does not assert disjointness. Each listed id must be valid, unique within the list, and identify a different feature present in the catalogue. Multiple broader features are allowed.
+
+Every occurrence of the narrower feature must also be an occurrence of the broader feature, with the same underlying counted object. Unit descriptions may differ in specificity, as with a contracted perfect auxiliary and a finite verb form, but the counting conventions must be compatible. This is an assertion about feature definitions, independent of what particular detection rules return. Structural validation cannot establish linguistic subsumption or unit compatibility from their prose descriptions.
+
+The initial relationships are BE passives and GET passives under passives, and contracted perfect HAD under past tense. Contracted perfect HAD is not placed under perfect aspect: the contracted auxiliary and the perfect predicate are different counted objects. The presence of one can entail the presence of the other without being occurrence subsumption. Neither presence entailment nor rule dependency belongs in this relation.
+
+Relations compose transitively: if A is subsumed by B and B by C, A is subsumed by C. The stored links express strict subsumption, so self-links and cycles are invalid. Together with implicit self-comparisons, this defines a partial order on feature ids. Equivalent definitions must not be encoded as a cycle; an explicit equivalence mechanism is outside this version of the format.
+
+Authors may list a broader feature even when it is already implied through another listed feature. Consumers can derive the transitive closure and the cover relation (the transitive reduction). A Hasse diagram displays only cover links, with broader features above narrower ones. Unconnected features have no declared relationship; the diagram does not infer one from names, tags, shared examples or rule references.
+
+Subsumption does not inherit rules, copy examples, generate detections or add feature counts together. A broader detector may miss a narrower detector's result, or the narrower detector may overcount. Such disagreements concern detection methods and do not automatically invalidate the semantic declaration. Comparing detector outputs requires compatible annotations and an explicit choice of rule pair and occurrence alignment; this format does not select those implicitly.
 
 ## 4. rules.yaml
 

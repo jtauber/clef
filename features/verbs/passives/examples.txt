@@ -1,0 +1,43 @@
+The parcels [were delivered] this morning.
+They [were selected] and [extracted].
+They [were selected] or [extracted].
+They [were selected] and [extracted] and [transported].
+The bridge has [been closed] since May.
+    Intended verbal reading: the bridge was closed by the authorities and remains closed.
+
+@from le_foll_2024
+He has [been told] before.
+
+It's [been repaired].
+    Only BE and the passive participle belong to this feature; 's is HAS here.
+She has [been selected] and [extracted].
+She'd [be arrested].
+The early train [was cancelled].
+I insist that he [be told].
+The window[?'s broken].
+    A passive event or a description of the window's state.
+The door {was open}.
+She has been working here for years.
+He [got arrested] at the border.
+We had it repaired last week.
+Everyone who {was} there {signed} the card.
+    WAS and SIGNED belong to different clauses; the contextual rule can bridge them.
+She{'s left} the building.
+    's is HAS, but the contextual rule can take it to be IS.
+They selected and extracted the samples.
+
+# GET passives and their contrasts.
+She has [got arrested].
+She has not [got arrested].
+She has not really [got arrested].
+She has [gotten arrested].
+She has not really [gotten arrested].
+Have you [got arrested]?
+She {got} the car {repaired}.
+    A causative, not a GET passive. The contextual rule nevertheless matches REPAIRED.
+She {got} him {arrested}.
+    The object HIM is the person arrested.
+What I {got was} a refund.
+    WAS is finite; the contextual rule can mistake it for a participle.
+She has {got better}.
+He'd got a car.
