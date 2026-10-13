@@ -20,3 +20,5 @@ Single words used adverbially to indicate a physical location, direction or dist
 This is feature 4 in section B of [@biber_1988, p. 224]. Biber supplies a list of 42 words, drawn from Quirk et al., and explains that he excludes items with other major functions, such as *in* and *on*. The list is stored in `lexicons/biber_1988/place-adverbials.txt`.
 
 The biber rule matches the listed forms without testing their function in context. It can therefore count non-adverbial or non-spatial uses and miss place adverbials absent from the list, including *here* and *there*.
+
+MAT 1.3.2 [@mat] uses the same word list but excludes proper-noun tags (NNP and NNPS). Its earlier indefinite-pronoun pass removes that tag from *nowhere*, so *nowhere* still counts. The mat rule preserves this exception. Other POS tags are accepted, leaving the same contextual overcounts and lexical omissions as the biber rule. MAT's list is recorded separately in `lexicons/mat/place-adverbials.txt`.

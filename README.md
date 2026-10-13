@@ -25,7 +25,7 @@ Work is considerably further along privately but, for initial feedback, I have r
 - Indefinite pronouns
 - Pro-verb do
 
-All twelve carry the `biber-1988` tag; coverage of that inventory is currently partial. The adverbial, pronoun and pro-verb features currently have Biber rules only.
+All twelve carry the `biber-1988` tag; coverage of that inventory is currently partial. The adverbial features have Biber and MAT rules; the pronoun and pro-verb features currently have Biber rules only.
 
 More will follow, initially all from Biber, a few at a time.
 
@@ -39,7 +39,7 @@ The companion `clef-validation` repository will contain structural checks, saved
 
 The initial features follow Biber [@biber_1988]. Examples credited to Le Foll [@le_foll_2024] come from Appendix C, "Linguistic Features", of the book's [online supplements](https://elenlefoll.github.io/TextbookMDA/AppendixC.html), available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). CLEF has adapted their formatting and added occurrence annotations and explanatory notes.
 
-For MAT, we cite Nini's 2019 chapter [@nini_2019], as [requested by its author](https://sites.google.com/site/multidimensionaltagger/about). The MAT rules and lexicon in this catalogue are reconstructed from version 1.3.2 [@mat].
+For MAT, we cite Nini's 2019 chapter [@nini_2019], as [requested by its author](https://sites.google.com/site/multidimensionaltagger/about). The MAT rules and lexicons in this catalogue are reconstructed from version 1.3.2 [@mat].
 
 MFTE is described by Le Foll and Shakir [@le_foll_shakir_2025]. Following its authors' [citation guidance](https://github.com/mshakirDr/MFTE#citation), we also cite MFTE Python 1.0 [@mfte_python_2023] and Stanza [@stanza_2020]. The MFTE rules and lexicons in this catalogue are reconstructed from version 1.6.0.2 [@mfte].
 

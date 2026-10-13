@@ -1,0 +1,34 @@
+# title: Time-adverbial forms used by MAT 1.3.2
+# from: mat
+# match: form
+afterwards
+again
+earlier
+early
+eventually
+formerly
+immediately
+initially
+instantly
+late
+lately
+later
+momentarily
+now
+nowadays
+once
+originally
+presently
+previously
+recently
+shortly
+simultaneously
+soon
+subsequently
+to-day
+to-morrow
+to-night
+today
+tomorrow
+tonight
+yesterday

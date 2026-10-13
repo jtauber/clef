@@ -21,3 +21,5 @@ Single words used adverbially to express time, including when something happens,
 This is feature 5 in section B of [@biber_1988, p. 224]. Biber supplies a list of 28 words, drawn from Quirk et al., and explains that he excludes items with other major functions, such as *last* and *next*. The list is stored in `lexicons/biber_1988/time-adverbials.txt`.
 
 The biber rule matches the listed forms without testing their function in context. It can therefore count non-adverbial or non-temporal uses and miss time adverbials absent from the list, including *already* and *then*.
+
+MAT 1.3.2 [@mat] adds the spellings *to-day*, *to-morrow* and *to-night*. It excludes *soon* immediately before *as* and retags *now* after punctuation as a discourse particle. The mat rule includes these exclusions within a sentence; its note explains the source's additional behaviour at input and sentence boundaries. The word list is stored in `lexicons/mat/time-adverbials.txt`. Like Biber's rule, it does not require an adverb tag or otherwise distinguish temporal uses from nominal, adjectival or clause-introducing uses.

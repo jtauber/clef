@@ -15,3 +15,29 @@ rules:
       It also matches listed forms used as prepositions (*outside the
       station*), adjectives (*the outside wall*), degree modifiers
       (*far better*) or references to text (*see above*).
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, tags indefinite pronouns; tags place adverbials
+    match:
+      - cql: |
+          [form=$mat/place-adverbials%c]
+    unless:
+      - cql: |
+          [xpos="NNP.*" & form!="nowhere"%c]
+    note: |
+      MAT 1.3.2 uses the same 42 forms as Biber's printed list, ignoring
+      case, but excludes tags beginning NNP (NNP and NNPS). Its earlier
+      indefinite-pronoun pass replaces the tag of *nowhere*, so *nowhere*
+      still becomes PLACE even when supplied as NNP or NNPS. The exclusion
+      preserves that exception.
+
+      Other tags are accepted: the rule does not require an adverb tag or
+      distinguish spatial uses from prepositional, adjectival, nominal,
+      degree or textual uses. Unlisted *here* and *there* are missed.
+
+      This reconstruction matches whole token forms on supplied Penn
+      annotations. MAT searches for a word boundary inside word_TAG
+      strings, so it can also match a listed suffix of a single token
+      such as *north-west*. That substring behaviour and MAT's tagger and
+      text preprocessing are not reproduced.
