@@ -115,7 +115,9 @@ Each entry under `match` or `unless` has one key, `cql` or `semgrex`, whose valu
 
 ### Whose rule it is
 
-A rule with `from:` reconstructs the cited source's detection behaviour, quirks included. Its note identifies known approximation limits, such as omitted preprocessing or earlier retagging passes. A rule without `from:` is one CLEF proposes.
+A rule with `from:` aims to reconstruct the cited source's detection behaviour within CLEF's annotation model and sentence-local evaluation. Preserve source quirks that can be represented faithfully in that model. A rule without `from:` is one CLEF proposes.
+
+Documented exceptions are allowed where the source's processing model cannot be represented faithfully, for example when behaviour depends on unavailable document context or preprocessing. The rule's note must describe the difference and why it is retained. It must also identify other known approximation limits, such as omitted retagging passes. Recorded differences remain mismatches in reconstruction-fidelity comparisons.
 
 Every rule is measured against the same annotated examples, using input annotations compatible with its declared tagsets. A miss or over-count can arise from the input annotations, a difference between the reconstruction and its source, or the source's treatment of the feature differing from CLEF's conventions. Comparisons with source output on the same supplied annotations check reconstruction fidelity separately. Rule notes distinguish known reconstruction limits from the source's own misses and over-counts.
 
