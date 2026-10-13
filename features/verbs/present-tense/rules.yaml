@@ -20,11 +20,13 @@ rules:
 
   - id: mat
     from: mat
-    at: Tagger_MAT.pl, present tenses
+    at: Tagger_MAT.pl, tags emphatics; present tenses
     match:
       - cql: |
           [xpos="VBP|VBZ"]
     unless:
+      - cql: |
+          [form=$mat/emphatics%c]
       - cql: |
           @[form="do|does|did|doing|done"%c] [xpos="V.*"]
     note: |
@@ -34,11 +36,11 @@ rules:
       Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
       of the supplied tag, so even *did* mistagged VBP is excluded here.
 
-      This reconstruction uses the supplied POS tags with the DO exclusion
-      above. MAT's other lexical retagging is only partly represented. For
-      example, MAT changes *really* to EMPH even if its input tag is VBP.
-      This rule retains that supplied tag and counts *really* as present
-      tense. This difference is recorded on deliberately mistagged input.
+      MAT also retags *just*, *really*, *most* and *more* as EMPH regardless
+      of their supplied POS tags. The emphatic lexicon exclusion reproduces
+      this for whole-token forms, ignoring case, so *really* mistagged VBP
+      does not count. Context-dependent emphatic retagging, apart from DO
+      above, and other lexical retagging remain only partly represented.
 
   - id: mfte
     from: mfte
