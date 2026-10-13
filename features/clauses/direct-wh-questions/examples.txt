@@ -68,3 +68,34 @@ Here is the issue: {whether} doing less would help.
     An embedded alternative question; DOING is in the printed AUX inventory.
 Can she leave now?
 The package arrived yesterday.
+
+[Where] does she live.
+    Inversion can identify a question without a final question mark.
+[Who] called
+    The contextual subject-question branch requires a question mark and misses this unpunctuated question.
+[Where] and when did she go?
+    One coordinated WH-phrase; only WHERE is marked.
+[Who] called and [what] happened?
+    Two question clauses, with one occurrence each.
+[How] many people arrived?
+[Why] not wait?
+To [which] department should I apply?
+You gave [what] to whom?
+    An echo question with several WH-expressions; only the first is marked.
+[Which] one?
+She asked, "[Which] route should we take?"
+I know {what} can help.
+Do you know {who} called?
+Is that the person {who} called earlier?
+Did the person, {who} called earlier, leave a message?
+    A comma-delimited relative inside a yes/no question; the contextual exclusion keeps WHO from counting as a direct question.
+Does {whatever} is chosen have to fit?
+Is the issue {whether} doing less would help?
+Is "{who}" a pronoun?
+The word "{why}" has three letters.
+She asked {where}, {when} and {why} he left.
+{What} a lovely day!
+I asked John, [who] called?
+    A comma introducing a direct subject question, without a closing relative-clause comma.
+[Who] called, I wonder?
+    The question has no preceding nominal antecedent for the relative-clause exclusion.

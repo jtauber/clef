@@ -1,4 +1,111 @@
 rules:
+  - id: contextual
+    match:
+      # Fronted WH phrase with inversion; question punctuation is not required.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [xpos="IN|TO"]{0,2}
+          @[form="who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [xpos="MD" | (lemma="be|have|do"%c & xpos="VBD|VBP|VBZ") | (form="['’](s|m|re|ve|d|ll)" & xpos="V.*|MD")]
+          [form="n['’]t|not"%c]{0,1}
+          [xpos="PRP|PRP\$|DT|PDT|CD|NN.*|EX"]
+      # Subject WH questions, including coordinated WH phrases.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="who|what|which|whose"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [xpos="VBD|VBP|VBZ|MD"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # HOW MANY/MUCH phrases used as subjects.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="how"%c & xpos="W.*"] [form="many|much"%c]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          [xpos="VBD|VBP|VBZ|MD"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # WHY with a bare infinitive, including WHY NOT.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="why"%c & xpos="W.*"] [form="not"%c]{0,1}
+          [xpos="VB"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # Elliptical questions, including preposition-fronted and nominal WH phrases.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [xpos="IN|TO"]{0,2}
+          @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [form="\?"]
+      # Echo questions: a subject and finite verb precede the first WH-word.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [form!="who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however|whether"%c & xpos="PRP|DT|PDT|CD|NN.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|PRP\$"]*
+          [xpos="VBD|VBP|VBZ"]
+          [form!="[.!?;:]|who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however|whether"%c & xpos!="W.*|``|''"]*
+          @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos!="V.*|MD|``|''" & form!="[.!?;:]"]*
+          [form="\?"]
+    unless:
+      # Keep the first WH-word in a coordinated phrase as its sole anchor.
+      - cql: |
+          [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          [form="and|or"%c] @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+      # Comma-delimited relatives with a preceding nominal antecedent.
+      - cql: |
+          [xpos="NN.*|PRP"] [form=","]
+          @[form="who|whom|whose|which"%c & xpos="W.*"]
+          [form!="[.!?;:,]" & xpos!="``|''"]* [form=","]
+    note: |
+      A CLEF proposal using Penn POS tags, auxiliary lemmas and word order.
+      Fronted questions allow punctuation, an opening quote or AND/OR/BUT
+      before the WH-phrase, and up to two fronted prepositions. Nominal,
+      adjectival, adverbial and prepositional tokens can extend the phrase.
+      The anchor is its first WH-word. Excluding later coordinated WH-words
+      gives one occurrence for *who and what*, while a verb before the
+      conjunction permits separate question clauses.
+
+      Inversion uses a modal or finite BE/HAVE/DO, optionally followed by
+      negation, then a likely subject onset. This branch does not require
+      a question mark. Split auxiliary and negative contractions are
+      accepted, including either apostrophe. A WH-word fused with its
+      auxiliary in a single token is not normalized.
+
+      Subject questions, HOW MANY/MUCH subjects, WHY with a bare infinitive,
+      elliptical questions and echoes require a following question mark.
+      Their lookahead cannot cross a period, exclamation mark, semicolon,
+      colon or quotation mark. Echoes require a subject and finite verb
+      before the first WH-word, with no later verb before the question mark.
+      WHETHER is excluded; -ever forms are included only in the inversion
+      branch. Comma-delimited WHO/WHOM/WHOSE/WHICH relatives preceded by
+      a noun or personal pronoun are excluded.
+
+      These are local heuristics, not a full clause analysis. Supplied POS
+      tags and lemmas affect the result. Unpunctuated subject questions such
+      as *Who called* are missed, as are some complex subject phrases,
+      auxiliary chains in echoes and -ever questions without inversion.
+      Quoted words and punctuation can remain ambiguous, and the relative
+      exclusion can suppress similarly punctuated direct questions. A later
+      question mark can license an earlier clause incorrectly. Neither
+      sentence punctuation nor word order guarantees interrogative meaning.
+
   - id: biber
     from: biber_1988
     at: Appendix II, section D, no. 13, p. 227; notation on pp. 222–223
