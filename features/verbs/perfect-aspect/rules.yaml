@@ -94,12 +94,12 @@ rules:
 
   - id: mat
     from: mat
-    at: Tagger_MAT.pl, perfect aspects
+    at: Tagger_MAT.pl, tags quantifiers; tags emphatics; perfect aspects
     match:
       - cql: |
-          @[form="have|has|had|having|hath"%c] [xpos="RB.*"]{0,2} [xpos="VBD|VBN"]
+          @[form="have|has|had|having|hath"%c] [xpos="RB.*" & form!=$mat/quantifiers%c]{0,2} [xpos="VBD|VBN" & form!=$mat/quantifiers%c]
       - cql: |
-          @[form="have|has|had|having|hath"%c] [form="not|n't"%c & xpos="RB.*"]{0,1} [xpos="NN.*|PRP.*"] [xpos="VBD|VBN"]
+          @[form="have|has|had|having|hath"%c] [form="not|n't"%c & xpos="RB.*"]{0,1} [xpos="NN.*|PRP.*" & form!=$mat/quantifiers%c] [xpos="VBD|VBN" & form!=$mat/quantifiers%c]
     unless:
       - cql: |
           @[form="have|has|had|having|hath"%c] [form="not|n't"%c & xpos="RB.*"]{0,1} [form=$mat/indefinite-pronouns%c] [xpos="VBD|VBN"]
@@ -117,6 +117,15 @@ rules:
       *nowhere*, which is also kept in the exclusion list. Like Biber's,
       its second pattern also matches *have* with an object and a
       participle (*had it fixed*).
+
+      MAT retags all nine quantifier forms before the perfect check, so
+      they cannot supply a participle, adverb or noun/pronoun position,
+      even with a qualifying input tag. The constraints reproduce this
+      for whole-token forms, ignoring case. Emphatic retagging instead
+      proceeds from left to right: when MAT checks HAVE, following
+      *just*, *really*, *most* and *more* still have their input tags and
+      can supply those positions. Other earlier retagging remains only
+      partly represented.
 
   - id: mfte
     from: mfte

@@ -20,15 +20,17 @@ rules:
 
   - id: mat
     from: mat
-    at: Tagger_MAT.pl, tags emphatics; present tenses
+    at: Tagger_MAT.pl, tags quantifiers; tags emphatics; present tenses
     match:
       - cql: |
           [xpos="VBP|VBZ"]
     unless:
       - cql: |
+          [form=$mat/quantifiers%c]
+      - cql: |
           [form=$mat/emphatics%c]
       - cql: |
-          @[form="do|does|did|doing|done"%c] [xpos="V.*"]
+          @[form="do|does|did|doing|done"%c] [xpos="V.*" & form!=$mat/quantifiers%c]
     note: |
       MAT 1.3.2 derives its present-tense count from tokens tagged VBP or
       VBZ after its earlier retagging passes. It retags DO directly followed
@@ -36,11 +38,17 @@ rules:
       Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
       of the supplied tag, so even *did* mistagged VBP is excluded here.
 
-      MAT also retags *just*, *really*, *most* and *more* as EMPH regardless
-      of their supplied POS tags. The emphatic lexicon exclusion reproduces
-      this for whole-token forms, ignoring case, so *really* mistagged VBP
-      does not count. Context-dependent emphatic retagging, apart from DO
-      above, and other lexical retagging remain only partly represented.
+      MAT replaces the tags of its nine quantifier forms with QUAN and
+      its four unconditional emphatic forms with EMPH, regardless of their
+      supplied POS tags. The lexicon exclusions reproduce this for
+      whole-token forms, ignoring case, so *all* or *really* mistagged VBP
+      or VBZ does not count.
+
+      Quantifiers are retagged across the input before the DO check, so a
+      following quantifier cannot supply its verb context. Emphatics are
+      retagged from left to right: a following *really* still supplies that
+      context if its input tag begins V. Other lexical and contextual
+      retagging remains only partly represented.
 
   - id: mfte
     from: mfte

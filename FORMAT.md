@@ -88,12 +88,17 @@ rules:
       - cql: |
           [form=$mat/quantifiers%c]
       - cql: |
-          @[form="do|does|did|doing|done"%c] [xpos="V.*"]
+          [form=$mat/emphatics%c]
+      - cql: |
+          @[form="do|does|did|doing|done"%c] [xpos="V.*" & form!=$mat/quantifiers%c]
     note: |
       MAT 1.3.2 retags DO directly followed by a verb as an emphatic.
-      It also retags its quantifier forms as QUAN, regardless of their
-      supplied POS tags. This reconstruction includes both exclusions;
-      its other lexical retagging is only partly represented.
+      It also retags its quantifier forms as QUAN and its unconditional
+      emphatic forms as EMPH, regardless of their supplied POS tags.
+      Quantifiers are retagged first and cannot supply the verb after DO.
+      Emphatics are retagged from left to right, so a following emphatic
+      still supplies its input tag to the DO check. Other lexical and
+      contextual retagging remains only partly represented.
 ```
 
 | Key | Meaning |

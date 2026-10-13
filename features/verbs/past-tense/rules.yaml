@@ -26,7 +26,9 @@ rules:
       - cql: |
           [form=$mat/quantifiers%c]
       - cql: |
-          @[form="do|does|did|doing|done"%c] [xpos="V.*"]
+          [form=$mat/emphatics%c]
+      - cql: |
+          @[form="do|does|did|doing|done"%c] [xpos="V.*" & form!=$mat/quantifiers%c]
     note: |
       MAT 1.3.2 counts tokens that retain VBD after its retagging passes.
       It retags DO directly followed by a verb as an emphatic
@@ -36,11 +38,17 @@ rules:
       Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
       of the supplied tag; any of these mistagged VBD is excluded before a verb.
 
-      MAT also replaces the tags of its nine quantifier forms with QUAN,
-      regardless of their supplied POS tags. The quantifier exclusion
-      reproduces this for whole-token forms, ignoring case, so *all*
-      mistagged VBD does not count. MAT's other lexical retagging remains
-      only partly represented.
+      MAT replaces the tags of its nine quantifier forms with QUAN and
+      its four unconditional emphatic forms with EMPH, regardless of their
+      supplied POS tags. The lexicon exclusions reproduce this for
+      whole-token forms, ignoring case, so *all* or *really* mistagged VBD
+      does not count.
+
+      Quantifiers are retagged across the input before the DO check, so a
+      following quantifier cannot supply its verb context. Emphatics are
+      retagged from left to right: a following *really* still supplies that
+      context if its input tag begins V. Other lexical and contextual
+      retagging remains only partly represented.
 
   - id: mfte
     from: mfte
