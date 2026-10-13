@@ -1,0 +1,12 @@
+# title: Quantifier forms retagged by MAT 1.3.2
+# from: mat
+# match: form
+all
+any
+each
+every
+few
+many
+much
+several
+some

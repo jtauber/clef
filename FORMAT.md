@@ -86,11 +86,14 @@ rules:
           [xpos="VBD"]
     unless:
       - cql: |
+          [form=$mat/quantifiers%c]
+      - cql: |
           @[form="do|does|did|doing|done"%c] [xpos="V.*"]
     note: |
       MAT 1.3.2 retags DO directly followed by a verb as an emphatic.
-      This reconstruction includes that exclusion; its other lexical
-      retagging is only partly represented.
+      It also retags its quantifier forms as QUAN, regardless of their
+      supplied POS tags. This reconstruction includes both exclusions;
+      its other lexical retagging is only partly represented.
 ```
 
 | Key | Meaning |

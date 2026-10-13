@@ -18,10 +18,13 @@ rules:
 
   - id: mat
     from: mat
+    at: Tagger_MAT.pl, tags quantifiers; tags emphatics
     match:
       - cql: |
           [xpos="VBD"]
     unless:
+      - cql: |
+          [form=$mat/quantifiers%c]
       - cql: |
           @[form="do|does|did|doing|done"%c] [xpos="V.*"]
     note: |
@@ -33,11 +36,11 @@ rules:
       Its DO list includes *do*, *does*, *did*, *doing* and *done*, regardless
       of the supplied tag; any of these mistagged VBD is excluded before a verb.
 
-      This reconstruction uses the supplied POS tags with the DO exclusion
-      above. MAT's other lexical retagging is only partly represented. For
-      example, MAT changes *all* to QUAN even if its input tag is VBD. This
-      rule retains that supplied tag and counts *all* as past tense. This
-      difference is recorded on deliberately mistagged input.
+      MAT also replaces the tags of its nine quantifier forms with QUAN,
+      regardless of their supplied POS tags. The quantifier exclusion
+      reproduces this for whole-token forms, ignoring case, so *all*
+      mistagged VBD does not count. MAT's other lexical retagging remains
+      only partly represented.
 
   - id: mfte
     from: mfte
