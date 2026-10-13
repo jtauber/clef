@@ -10,7 +10,7 @@ The forthcoming companion library `pyclef` will provide a Python engine that int
 
 ## This release
 
-Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first twelve of the 67 features in Biber (1988):
+Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first thirteen of the 67 features in Biber (1988):
 
 - Past tense
 - Perfect aspect
@@ -24,8 +24,9 @@ Work is considerably further along privately but, for initial feedback, I have r
 - Demonstrative pronouns
 - Indefinite pronouns
 - Pro-verb do
+- Direct WH-questions
 
-All twelve carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber and MAT rules; the pronoun and pro-verb features currently have Biber rules only.
+All thirteen carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber and MAT rules; the pronoun, pro-verb and direct WH-question features currently have Biber rules only.
 
 Further Biber features will follow, a few at a time. The catalogue also includes five features used by the contextual past-tense rule: contracted perfect HAD, BE passives, GET passives, possessive and obligation HAVE GOT, and HAVE/NEED TO. They have their own definitions and examples. A broader passive feature brings BE and GET passives together. These additions do not extend the stated coverage of the Biber inventory.
 

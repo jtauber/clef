@@ -1,0 +1,39 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section D, no. 13, p. 227; notation on pp. 222–223
+    match:
+      - cql: |
+          (<s> | [form="[.!?:;-]"])
+          @[form="what|where|when|how|whether|why|whoever|whomever|whichever|wherever|whenever|whatever|however"%c]
+          [form="can|may|shall|will|could|might|should|would|must|do|does|did|doing|done|have|has|had|having|am|is|are|was|were|being|been"%c]
+    unless:
+      - cql: |
+          @[form="what|where|when|how|whether|why|whoever|whomever|whichever|wherever|whenever|whatever|however"%c]
+          []
+          [form="n['’]t"%c]
+    note: |
+      Approximates (CL-P or T#) + WHO + AUX with sentence start or clause
+      punctuation, anchoring on WHO. The grammatical inventories are
+      matched by whole form, ignoring case, without a POS
+      test. The WHO list includes *whether* and the -ever forms, but not
+      *who*, *whom*, *whose* or *which*. AUX expands the printed MODAL, DO,
+      HAVE and BE inventories with all contracted forms removed. Non-finite
+      entries remain; bare *be* is absent from the printed BE list.
+
+      Fused negative contractions fail the AUX list. The exclusion also
+      rejects an auxiliary followed by a separate *n't* or *n’t* token,
+      preserving the contraction restriction across that common split.
+      Other tokenizations are not normalized. An uncontracted *not* is
+      allowed after AUX. No final question mark or question analysis is
+      required, so matching non-question sequences can overcount.
+
+      CL-P is the six literal punctuation forms . ! ? : ; -; commas,
+      quotation marks and typographic dashes are not added. Sentence start
+      is a proxy for unavailable boundary information, not a tone-unit
+      annotation. It also allows a question after sentence-ending punctuation
+      that is no longer available in the current supplied sentence. Internal
+      tone-unit boundaries without qualifying punctuation remain unavailable.
+      WHO must immediately follow the boundary and AUX must immediately
+      follow WHO. The original tagging program and its input have not been
+      reproduced or verified.

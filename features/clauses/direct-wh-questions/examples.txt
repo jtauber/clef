@@ -1,0 +1,70 @@
+[Where] does she live?
+    Sentence start supplies the rule's approximation to the boundary condition.
+[What] did she buy?
+[Where] does the road end?
+[When] will you arrive?
+[How] can we open the gate?
+[Why] have they left?
+[Why] had they left so early?
+[How] is the work progressing?
+[Where] has she gone?
+[How] would you respond?
+[How] should we proceed?
+One question remains: [where] does she live?
+    The colon supplies Biber's clause-punctuation context within the sentence.
+I asked, [where] does she live?
+    A comma is not in Biber's CL-P inventory.
+She asked: "[Where] does she live?"
+    The opening quotation mark interrupts the required adjacency.
+She left. [Where] did she go?
+    The question can match at sentence start even when the preceding period belongs to a separate supplied sentence.
+[Where] on earth did she go?
+[How] many pages did you read?
+    HOW is followed by MANY, not by AUX.
+[Which] route should we take?
+[Who] called this morning?
+[Whom] did they invite?
+[Whose] is this coat?
+    WHO, WHOM, WHOSE and WHICH belong to WHP, not the WHO category in the printed rule.
+[What] happened next?
+    A subject question without the required auxiliary.
+[Why] be so hasty?
+    Bare BE is absent from the printed auxiliary inventory.
+[Whatever] is he doing?
+    An emphatic direct question; WHATEVER is in the WHO inventory.
+[When]'s she arriving?
+[Where]’s she gone?
+[Why] didn't she call?
+[Why] didn’t she call?
+    The AUX contraction restriction applies whether DIDN'T is fused or split.
+[Why] did she not call?
+    Uncontracted negation does not violate that restriction.
+[Where] can't we park?
+[What] did she buy; [where] did she go?
+    Two question clauses; the semicolon supplies a boundary for the second.
+[What] did she buy and [where] did she go?
+    Two question clauses; AND does not supply Biber's required boundary.
+[Who] gave what to whom?
+    One question with several WH-expressions; only the first WH-word is marked.
+[Who] and what caused the delay?
+    A coordinated WH-phrase in one question, counted once.
+To [whom] did you speak?
+You put the parcel [where]?
+    An echo question with its WH-expression in place.
+[Why]?
+    An elliptical direct question.
+But [why] should anyone care?
+    A rhetorical question still counts.
+I asked {where} she lived.
+    An embedded question, not a direct question.
+Can you tell me {where} she lives?
+    The direct question is yes/no; WHERE introduces an embedded question.
+This is the desk {where} I work.
+Look {how} tall the tree is!
+    An exclamative, not a question.
+There is only one condition: {whatever} is chosen must fit.
+    A non-question sequence satisfying CL-P + WHO + AUX.
+Here is the issue: {whether} doing less would help.
+    An embedded alternative question; DOING is in the printed AUX inventory.
+Can she leave now?
+The package arrived yesterday.
