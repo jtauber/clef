@@ -30,6 +30,7 @@ Every feature belongs to a group. A group’s `README.md` has a `# Name` line, t
 
 - A feature’s id is the name of its directory, in lower case with hyphens (`past-tense`). Ids are unique across all groups.
 - A rule’s id is unique within its `rules.yaml`.
+- A reference to a rule is `<feature-id>/<rule-id>`, for example `be-passives/contextual`. Feature ids are unique across groups, so the group is omitted.
 - A citation key is a key in `references.bib`: letters, digits and underscores (`biber_1988`).
 
 ## 3. feature.md
@@ -111,7 +112,7 @@ rules:
 | `tagsets` | the tagsets the rule’s patterns use, where they differ from the defaults (section 5.1) |
 | `note` | Markdown: known misses and over-counts, and why the rule is written as it is |
 
-Each entry under `match` or `unless` has one key, `cql` or `semgrex`, whose value is the pattern. Write patterns as YAML literal blocks (`cql: |`): YAML applies no escaping inside them, so what you type is what the engine sees.
+Each entry under `match` or `unless` has exactly one key: `cql`, `semgrex` or `use`. The first two contain a pattern; `use` references a particular feature rule (section 5.4). Write patterns as YAML literal blocks (`cql: |`): YAML applies no escaping inside them, so what you type is what the engine sees.
 
 ### Whose rule it is
 
@@ -129,6 +130,7 @@ Every match produces a candidate occurrence with a **span**, containing the matc
 |---|---|---|
 | `cql` | the whole match | the token marked `@`; for a single-token pattern, that token is the implicit anchor |
 | `semgrex` | from the leftmost to the rightmost matched node | the pattern’s first node |
+| `use` | the referenced rule's surviving matches and their context | the rule's anchors after its own exclusions |
 
 Every pattern must produce exactly one anchor token per match. A CQL pattern that can match more than one token must explicitly mark its anchor with `@`. This requirement applies to both `match` and `unless` patterns.
 
@@ -212,6 +214,35 @@ Dependency patterns use [Stanford Semgrex](https://nlp.stanford.edu/software/tre
 ```
 
 `{}` is any node, and `/.../` is a regular expression that must match the whole value or relation name. Relations written after a node all start from that node. Parentheses let a related node have its own relations: in the last example, `>cop` starts from the head of HAVE. The anchor of a match is still the first node, HAVE in that example.
+
+### 5.4 Reusing feature rules
+
+Any feature rule can reference another rule with `use: <feature-id>/<rule-id>` in its `match` or `unless` list. The reference identifies an ordinary entry in the named feature's `rules.yaml`; reusable rules have no separate directory or format. Always specify the rule id: references do not choose a feature's default rule automatically.
+
+For example, the contextual past-tense rule uses:
+
+```yaml
+match:
+  - cql: |
+      [xpos="VBD"]
+  - use: contracted-perfect-had/contextual
+unless:
+  - use: perfect-aspect/contextual
+  - use: be-passives/contextual
+  - use: get-passives/contextual
+  - use: have-got/contextual
+  - use: have-need-to/contextual
+```
+
+Evaluate the referenced rule within the same supplied sentence as its caller. Apply its own exclusions and merge duplicate anchors before returning the result. A reference under `match` contributes those anchors as candidates; under `unless` it excludes candidates with the same anchors. It never removes the whole surrounding phrase or changes any input annotation. Reuse contributes only to the calling rule's result; feature counts are still evaluated separately, without adding dependency counts to the caller.
+
+Anchor choice is part of the referenced rule's behaviour. In *She had left*, the contextual perfect rule anchors on *left*, so the past-tense rule can exclude that participle while retaining *had*. Another perfect rule anchored on HAVE would not be an interchangeable exclusion. References cannot override anchors or select another rule as a fallback.
+
+References can nest and may point to rules declared later in the catalogue, including other rules in the same feature. They must resolve uniquely. Circular references are invalid, including self-references and cycles through exclusions. `use` references a complete rule; it is not text substitution inside a CQL or Semgrex pattern and cannot be quantified.
+
+Each rule declares its own nondefault tagsets. Its defaults are those in section 5.1, independent of its caller. Rules require compatible annotation schemes for all their direct patterns and all referenced rules, including exclusions. Conflicting requirements or an explicit caller declaration that contradicts a referenced rule's requirement are invalid; callers cannot reinterpret another rule's tags.
+
+Feature definitions, counting conventions and examples remain independent of their detection methods. A reused rule is evaluated against its own feature's examples as well as contributing to its callers. Provenance remains attached to each rule: referencing a reconstruction does not automatically make the caller a reconstruction of the same source. All rules must be valid, including ones not referenced elsewhere.
 
 ## 6. Lexicons
 

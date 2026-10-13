@@ -1,0 +1,20 @@
+I['ve got] serious problems.
+[Have]₁ you [got]₁ a car?
+[Have]₁ you [got]₁ serious problems?
+She [has got] very serious problems.
+He['d got] a car.
+    Intended possession reading: he owned a car at the time.
+He[’d got] a car.
+    Intended possession reading, with a curly apostrophe.
+He [has got] to leave early.
+He['d got] to leave.
+[Has]₁ she [got]₁ to leave?
+Why [has]₁ she [got]₁ to leave?
+She {has got} better.
+    Change of state, not possession. The contextual rule can overcount it.
+She {has got} much better.
+She has gotten much better.
+She has got arrested.
+She has not really got arrested.
+She has three sisters.
+They have finished the report.

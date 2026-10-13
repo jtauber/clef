@@ -98,3 +98,10 @@ She [has]₁ not really [got arrested]₁.
     One perfect. MFTE leaves *got* tagged as HAVE got: its correction back to perfect allows only zero or one intervening adverb.
 She [has]₁ not really [gotten arrested]₁.
     The same source limitation applies to *gotten*, because MFTE's HAVE got rule matches any word beginning with *got*.
+
+# Coordinated perfect predicates sharing HAVE count separately.
+She [has left] and [returned].
+She['s gone] and [returned].
+She [has made] and [sold] furniture.
+She [has been selected] and [extracted].
+    Two perfect passive predicates sharing HAS BEEN.

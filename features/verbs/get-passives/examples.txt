@@ -1,0 +1,17 @@
+He [got arrested] at the border.
+She has [got arrested].
+She has not [got arrested].
+She has not really [got arrested].
+She has [gotten arrested].
+She has not really [gotten arrested].
+Have you [got arrested]?
+She {got} the car {repaired}.
+    A causative, not a GET passive. The contextual rule nevertheless matches REPAIRED.
+She {got} him {arrested}.
+    The object HIM is the person arrested.
+What I {got was} a refund.
+    WAS is finite; the contextual rule can mistake it for a participle.
+She has {got better}.
+He'd got a car.
+The parcels were delivered this morning.
+They selected and extracted the samples.

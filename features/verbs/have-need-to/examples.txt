@@ -1,0 +1,17 @@
+She [has] to leave.
+She [needs] to leave.
+She [had] to leave.
+She [needed] to leave.
+She has [had] to leave.
+She has [needed] to leave.
+She does not [need] to leave.
+Does she [have] to leave?
+She [needs] urgently to leave.
+    The contextual rule misses the intervening adverb.
+She has three sisters.
+They had finished by noon.
+We had it repaired last week.
+He has got to leave early.
+You had better go.
+The outside wall needs painting.
+    NEED has an -ing complement, not a TO-infinitive.

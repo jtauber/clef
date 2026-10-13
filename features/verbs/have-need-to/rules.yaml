@@ -1,0 +1,14 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          @[form="need|needs|needed|have|has|had|having"%c & xpos="V.*"]
+          [form="to"%c & xpos="TO"]
+    note: |
+      Identify HAVE/NEED immediately before infinitival *to*. The anchor is
+      HAVE or NEED. This preserves MFTE's explicit necessity-modal category
+      choice [@mfte], without changing the input annotations.
+
+      Excluding these anchors from past tense omits finite *had* and *needed*
+      that count under CLEF's feature conventions. The rule is a category
+      choice for the MFTE-inspired rule, not a general definition of finiteness.

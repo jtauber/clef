@@ -1,0 +1,28 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          [
+            (form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*")
+            | (form="['’]s" & xpos="VBZ")
+          ]
+          [xpos="RB.*|CC|NN.*|PRP"]{0,2}
+          (
+            [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+            [form="and|or"%c]
+          )*
+          @[xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+    unless:
+      - use: perfect-aspect/contextual
+    note: |
+      Identify participles after BE, including coordinated participles and
+      -ed/-en forms potentially mistagged VBD. Inspired by MFTE's passive
+      correction [@mfte]. The anchor is each participle, not BE.
+
+      The perfect rule takes precedence, resolving some ambiguous
+      *'s* contexts as HAS. Supplied pronouns, including *he* in any case,
+      remain eligible in the gap; no temporary filled-pause tag is assigned.
+
+      The two-token gap is approximate. It can cross a clause boundary or
+      confuse an adjectival use with a passive. Irregular participles
+      mistagged VBD and not ending in -ed/-en are missed.

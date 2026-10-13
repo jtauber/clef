@@ -1,0 +1,16 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          @[form="['’]d" & xpos="MD|VBD"]
+          [xpos="RB.*"]{0,2}
+          [xpos="VBN" | (form=".*ed"%c & xpos="VBD")]
+    note: |
+      Interpret contracted *'d* before a participle as HAD, including when
+      supplied as MD. Allow either apostrophe and up to two adverbs, including
+      negation. The anchor is *'d*. Inspired by MFTE's contraction correction
+      [@mfte], without its dependence on earlier adverb retagging.
+
+      The feature covers contracted perfect HAD; HAD BETTER is excluded.
+      This is a contextual heuristic: an -ed form tagged VBD may be a finite
+      verb rather than a participle. *'d better* does not trigger this rule.

@@ -16,6 +16,43 @@ rules:
       The same feature stated with UD morphological features instead of a
       Penn tag, for pipelines that emit `feats` but no reliable `xpos`.
 
+  - id: contextual
+    match:
+      - cql: |
+          [xpos="VBD"]
+      - use: contracted-perfect-had/contextual
+    unless:
+      - use: perfect-aspect/contextual
+      - use: be-passives/contextual
+      - use: get-passives/contextual
+      - use: have-got/contextual
+      - use: have-need-to/contextual
+    note: |
+      A CLEF proposal inspired by MFTE's category distinctions and
+      corrections of mistagged participles [@mfte]. It counts supplied
+      VBD tokens and recovered contracted HAD, excluding anchors found
+      by the referenced feature rules. Each rule states its own
+      criteria and limitations alongside its feature definition.
+
+      This rule interprets the method rather than reconstructing MFTE's
+      implementation. It keeps supplied POS tags available throughout:
+      *he* is not temporarily made a filled pause, pronouns are not
+      restricted by spelling or capitalization, and HAVE got cannot
+      prevent the following participle from being a GET-passive.
+      Coordination is recognised for perfects and both passive types.
+      Ambiguous *'s* uses MFTE's preferred perfect forms and stative list.
+
+      The context windows remain heuristics, with possible clause-boundary
+      errors and adjectival/passive ambiguity. The GET-passive rule can mistake
+      a following finite verb for a participle. Necessity-modal HAVE/NEED
+      + *to* is excluded following MFTE, although CLEF's conventions count
+      finite *had* and *needed*. Supplied VBD in *had better* still counts;
+      modal-tagged *'d better* is not added as a past-tense candidate.
+
+      The separate mfte rule remains the implementation reconstruction
+      used for source-fidelity comparisons. Differences from that rule
+      are expected and do not establish that this proposal is more accurate.
+
   - id: mat
     from: mat
     at: Tagger_MAT.pl, tags quantifiers; tags emphatics
@@ -52,47 +89,165 @@ rules:
 
   - id: mfte
     from: mfte
-    at: MFTE.py, lines 394-398, 651-664, 806-822, 898-924, 1121-1123
+    at: MFTE.py, lines 394-420, 651-664, 806-822, 898-924, 1121-1123, 1186-1187
     match:
+      # Start with tokens supplied as past tense.
       - cql: |
           [xpos="VBD"]
+
+      # Recover HAD from modal-tagged 'd before a participle.
+      # Exclude negators and he, whose tags MFTE changes earlier.
       - cql: |
-          @[form="'d"%c & xpos="MD"] [xpos="RB.*" & form!="not|n['’]t|nt"%c]{0,1} [xpos="VBN"]
+          @[form="'d"%c & xpos="MD"]
+          [xpos="RB.*" & form!="not|n['’]t|nt|he"%c]{0,1}
+          [xpos="VBN"]
+
+      # MFTE also changes modal-tagged 'd to HAD before better.
       - cql: |
-          @[form="'d"%c & xpos="MD"] [form="better"%c]
+          @[form="'d"%c & xpos="MD"]
+          [form="better"%c]
+
+    # Remove candidates that MFTE retags. Each clause removes only its
+    # @ anchor; the surrounding tokens supply context.
     unless:
+      # BE-passive: remove an -ed/-en participle supplied as VBD.
+      # Temporarily retagged he cannot supply an intervening POS tag.
       - cql: |
-          [(form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ")] [xpos="RB.*|CC|NN.*|PRP"]{0,2} @[form=".*(ed|en)"%c & xpos="VBD"]
+          [
+            (form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*")
+            | (form="['’]s" & xpos="VBZ")
+          ]
+          [xpos="RB.*|CC|NN.*|PRP" & form!="he"%c]{0,2}
+          @[form=".*(ed|en)"%c & xpos="VBD"]
+
+      # HAVE/NEED before infinitival to become necessity modals.
       - cql: |
-          @[form="need|needs|needed|have|has|had|having"%c & xpos="V.*"] [form="to" & xpos="TO"]
+          @[form="need|needs|needed|have|has|had|having"%c & xpos="V.*"]
+          [form="to" & xpos="TO"]
+
+      # Continue a BE-passive through and/or coordination.
+      # The repeated group allows earlier coordinated participles before
+      # the VBD anchor; the first participle may be VBN or VBD.
       - cql: |
-          [form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*"] [xpos="RB.*|CC|NN.*|PRP"]{0,2} [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+          [form="be|am|is|are|was|were|been|being|['’]m|['’]re"%c & xpos="V.*"]
+          [xpos="RB.*|CC|NN.*|PRP" & form!="he"%c]{0,2}
+          [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+          (
+            [form="and|or"%c]
+            [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+          )*
+          [form="and|or"%c]
+          @[form=".*(ed|en)"%c & xpos="VBD"]
+
+      # After 's, with at most one adverb, a coordinated passive requires
+      # a first participle that MFTE does not reclaim as a perfect.
       - cql: |
-          [form="['’]s" & xpos="VBZ"] [xpos="RB.*"]{0,1} [(xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")) & form!="been|had|done"%c & form!=$mfte/stative-verbs%c] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+          [form="['’]s" & xpos="VBZ"]
+          [xpos="RB.*" & form!="he"%c]{0,1}
+          [
+            (xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD"))
+            & form!="been|had|done"%c
+            & form!=$mfte/stative-verbs%c
+          ]
+          (
+            [form="and|or"%c]
+            [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+          )*
+          [form="and|or"%c]
+          @[form=".*(ed|en)"%c & xpos="VBD"]
+
+      # After 's plus a coordinator, noun or pronoun, that perfect
+      # override does not apply. Continue the passive coordination.
       - cql: |
-          [form="['’]s" & xpos="VBZ"] [xpos="CC|NN.*|PRP"] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")] ([form="and|or"%c] [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")])* [form="and|or"%c] @[form=".*(ed|en)"%c & xpos="VBD"]
+          [form="['’]s" & xpos="VBZ"]
+          [xpos="CC|NN.*|PRP" & form!="he"%c]
+          [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+          (
+            [form="and|or"%c]
+            [xpos="VBN" | (form=".*(ed|en)"%c & xpos="VBD")]
+          )*
+          [form="and|or"%c]
+          @[form=".*(ed|en)"%c & xpos="VBD"]
+
+      # HAVE-perfect: remove an -ed participle supplied as VBD.
+      # Lower-case he can qualify by spelling in a one-token gap, but
+      # cannot supply the first POS tag in a two-token gap.
       - cql: |
-          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [xpos="RB.*|CC|NN.*|PRP"]{0,2} @[form=".*ed"%c & xpos="VBD"]
+          [
+            (form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*")
+            | (form="['’]s" & xpos="VBZ")
+            | form="hath"%c
+          ]
+          (
+            [(xpos="RB.*|CC|NN.*|PRP" & form!="he"%c) | form="he"]{0,1}
+            | [xpos="RB.*|CC|NN.*|PRP" & form!="he"%c]
+              [xpos="RB.*|CC|NN.*|PRP"]
+          )
+          @[form=".*ed"%c & xpos="VBD"]
+
+      # GET-passive: remove the following VBD token.
+      # The lookbehind on got preserves the HAVE + two-adverb exception:
+      # got is then HGOT and cannot trigger a passive (see the note).
       - cql: |
           (
             [form="get|gets|getting"%c & xpos="VB.*"]
             | (
                 <s> []{0,2}
-                | [(form!="have|has|['’]ve|had|having|['’]d"%c | xpos!="V.*") & (form!="['’]s" | xpos!="VBZ") & form!="hath"%c] [] []
+                | [
+                    (form!="have|has|['’]ve|had|having|['’]d"%c | xpos!="V.*")
+                    & (form!="['’]s" | xpos!="VBZ")
+                    & form!="hath"%c
+                  ]
+                  [] []
                 | [xpos!="RB.*" | form=$mfte/hedges%c] []
                 | [xpos!="RB.*" | form=$mfte/hedges%c]
-              ) [form="got"%c & xpos="VB.*"]
+              )
+              [form="got"%c & xpos="VB.*"]
           )
-          ([xpos="NN.*|PRP|RB.*"]{0,1} | [xpos="DT|NN.*"] [xpos="NN.*"])
+          (
+            [xpos="NN.*|PRP|RB.*" & form!="he"%c]{0,1}
+            | [xpos="DT|NN.*" & form!="he"%c]
+              [xpos="NN.*" & form!="he"%c]
+          )
           @[xpos="VBD"]
+
+      # HAVE got: remove got itself, which MFTE retags HGOT.
+      # Preserve its case-sensitive pronoun list and hedge exclusions.
       - cql: |
-          [(form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*") | (form="['’]s" & xpos="VBZ") | form="hath"%c] [(xpos="RB.*|NN.*" | form="i|we|he|she|they" | (form="it" & xpos="P.*")) & form!=$mfte/hedges%c]{0,2} @[form="got"%c & xpos="VBD"]
+          [
+            (form="have|has|['’]ve|had|having|['’]d"%c & xpos="V.*")
+            | (form="['’]s" & xpos="VBZ")
+            | form="hath"%c
+          ]
+          [
+            (
+              (xpos="RB.*|NN.*" & form!="he"%c)
+              | form="i|we|he|she|they"
+              | (form="it" & xpos="P.*")
+            )
+            & form!=$mfte/hedges%c
+          ]{0,2}
+          @[form="got"%c & xpos="VBD"]
+
+      # In split du n no, MFTE replaces all three supplied tags.
+      # Remove a VBD candidate on the first token, du.
       - cql: |
-          @[form="du"%c] [form="n"] [form="no"]
+          @[form="du"%c]
+          [form="n"]
+          [form="no"]
+
+      # Remove a VBD candidate on the second token, n.
       - cql: |
-          [form="du"%c] @[form="n"] [form="no"]
+          [form="du"%c]
+          @[form="n"]
+          [form="no"]
+
+      # Remove a VBD candidate on the third token, no.
       - cql: |
-          [form="du"%c] [form="n"] @[form="no"]
+          [form="du"%c]
+          [form="n"]
+          @[form="no"]
+
     note: |
       MFTE 1.6.0.2 counts the tokens Stanza tags VBD that keep that tag. It
       takes an -ed or -en form after BE, and an -ed form after HAVE, to be
@@ -133,11 +288,28 @@ rules:
       and does not allow an intervening negator. Its auxiliary lists accept
       either apostrophe. The words allowed between the auxiliary and the
       verb are approximated: MFTE lists particular sequences of adverbs,
-      negators and (pro)nouns. These patterns use the original POS tags and
-      do not reproduce all of MFTE's earlier retagging, which can also
-      affect whether it recognises the passive context. For example, MFTE
-      temporarily retags *he* as a filled pause; these patterns still allow
-      it between BE and the participle when its input tag is PRP.
+      negators and (pro)nouns.
+
+      Before checking passives, MFTE's filled-pause expression
+      `\b[he]{2,}_` also matches the pronoun *he*, ignoring case, and
+      replaces its tag with FPUH. Its passive checks no longer see a
+      pronoun there. The exclusions reproduce this for whole-token *he*
+      by disallowing it in the intervening positions after BE and GET.
+      This also prevents a passive reading from spreading to coordinated
+      participles. In *They were he selected and extracted*, with
+      *selected* tagged VBN and *extracted* tagged VBD, both MFTE and this
+      rule count *were* and *extracted* as past tense. MFTE restores *he*
+      to a pronoun tag later, after those passive checks.
+
+      HAVE patterns that recognise lower-case *he* by its spelling still
+      accept it, regardless of its supplied tag. Capitalized *He* and
+      *HE* lose their tags too, but do not match that case-sensitive
+      spelling check. No form of *he* supplies an adverb for the modal
+      *'d* correction or the first position of the two-token perfect gap;
+      the source leaves that gap's second position unrestricted.
+      Other earlier retagging, including the remaining filled-pause forms,
+      is not fully reproduced; the intervening POS sequences also remain
+      an approximation.
 
   - id: pybiber
     from: pybiber

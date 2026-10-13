@@ -1,0 +1,24 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          [form="get|gets|got|getting|gotten"%c & xpos="V.*"]
+          (
+            [xpos="NN.*|PRP|RB.*"]{0,1}
+            | [xpos="DT|NN.*"] [xpos="NN.*"]
+          )
+          (
+            [xpos="VBD|VBN"]
+            [form="and|or"%c]
+          )*
+          @[xpos="VBD|VBN"]
+    note: |
+      Identify participles after GET, including coordinated participles.
+      Inspired by MFTE's GET-passive correction [@mfte], accepting VBD as
+      well as VBN. The anchor is each participle, not GET.
+
+      This rule uses the supplied annotations independently of HAVE got
+      classification, so an earlier classification of *got* cannot block
+      detection of *arrested* in *has not really got arrested*. It includes
+      *gotten* as a GET form. It does not distinguish passive from causative
+      uses, and can overcount finite forms, as in *What I got was a refund*.

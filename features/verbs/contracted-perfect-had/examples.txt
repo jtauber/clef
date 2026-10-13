@@ -1,0 +1,23 @@
+She['d] left before we arrived.
+
+@from le_foll_2024
+She['d] already seen it.
+
+They['d] already eaten.
+She[’d] already eaten.
+They['d] been working.
+She['d] been ill.
+They[’d] been working.
+I[?'d] read it.
+    HAD or WOULD is unresolved without context.
+She{'d} leave if she could.
+She{'d} have left.
+She{’d} have left.
+She{'d} be arrested.
+She{'d} have been working.
+You{'d} better hurry.
+He{'d got} a car.
+    Possession reading. The contextual rule can misclassify this as perfect HAD.
+He{'d got} to leave.
+    Obligation reading, excluded from perfect aspect.
+The children had gone to bed by nine.

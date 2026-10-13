@@ -1,0 +1,27 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          [
+            (form="have|has|had|having|hath|['’]ve|['’]d"%c & xpos="V.*")
+            | (form="['’]s" & xpos="VBZ")
+            | (form="['’]d" & xpos="MD")
+          ]
+          [xpos="RB.*|CC|NN.*|PRP"]{0,2}
+          @[form="got"%c & xpos="VBD|VBN"]
+    unless:
+      - cql: |
+          @[form="got"%c]
+          [xpos="VBD|VBN"]
+    note: |
+      Identify *got* in HAVE got as a separate category, following MFTE
+      [@mfte]. The anchor is *got*, not HAVE. When another participle
+      immediately follows, leave *got* to the perfect construction instead.
+
+      Subjects qualify by their supplied POS tags, regardless of spelling or
+      capitalization. The two-token gap is an approximation; possession and
+      acquisition readings are not distinguished. The form must be *got*,
+      not merely a word beginning with those letters.
+
+      The feature excludes acquisition and change-of-state readings. This
+      rule does not distinguish them from possession, so they can overcount.

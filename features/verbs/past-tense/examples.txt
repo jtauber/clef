@@ -1,7 +1,7 @@
 The teacher [looked] at the class and [smiled].
 The sun [rose] over the city and traffic [filled] the streets.
 The broken window [let] in the cold air.
-    In the saved Stanza parse, *let* is tagged VB and analysed as an imperative, with no past-tense feature, so both CLEF rules miss this occurrence. The annotation gives the intended past-tense reading.
+    In the saved Stanza parse, *let* is tagged VB and analysed as an imperative, with no past-tense feature, so the POS, UD and contextual rules miss this occurrence. The annotation gives the intended past-tense reading.
 The door [was] open.
 He has written three letters today.
     "written" is a past participle (VBN), not a past-tense form.
@@ -34,9 +34,9 @@ They [were] {selected} and {extracted} and {transported}.
 They [selected] and [extracted] the samples.
     Two finite past-tense verbs. Without the passive context, both count.
 They [had] {finished} by noon.
-    A perfect participle. If it is tagged VBD, only MFTE's rule leaves it out.
+    A perfect participle. If it is tagged VBD, the MFTE reconstruction and contextual rule leave it out.
 He [got] {arrested} at the border.
-    A GET-passive participle. If it is tagged VBD, only MFTE's rule leaves it out.
+    A GET-passive participle. If it is tagged VBD, the MFTE reconstruction and contextual rule leave it out.
 Everyone who [was] there [signed] the card.
     MFTE's rule takes an -ed form after BE and an adverb (*was there*) to be a passive participle, so it misses *signed*.
 Anyone who [had] questions [asked] them at the end.
@@ -48,4 +48,4 @@ She [had] to leave.
 She [needed] to leave.
     Finite past NEED. MFTE applies the same necessity-modal correction.
 She has not really {got} {arrested}.
-    Both are participles. If *arrested* is tagged VBD, MFTE leaves it as past tense: *got* has already been tagged as HAVE got and cannot trigger its GET-passive correction.
+    Both are participles. If *arrested* is tagged VBD, MFTE leaves it as past tense: *got* has already been tagged as HAVE got and cannot trigger its GET-passive correction. The contextual rule checks GET-passives independently and excludes *arrested*.

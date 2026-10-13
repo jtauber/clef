@@ -9,6 +9,7 @@ Verb phrases in the perfect: a form of the auxiliary *have* followed by a past p
 ## Conventions
 
 - Each perfect counts once, however many words come between the auxiliary and the participle: *has she really left* is one.
+- Count each coordinated perfect predicate separately, even when HAVE is shared: *has left and returned* contains two occurrences. Mark shared HAVE with the first participle and each later coordinated participle separately.
 - Every form of *have* counts: present (*has left*), past (*had left*) and non-finite (*having left*, *to have left*, *should have left*).
 - Contracted *'ve*, *'d* and *'s* count when they are HAVE: *they'd left*, *it's been raining*, but not *the window's broken*.
 - Perfect progressives and perfect passives count once: *has been working*, *had been told*.
@@ -24,3 +25,5 @@ Verb phrases in the perfect: a form of the auxiliary *have* followed by a past p
 Biber's tagger marked the perfect on the past participle, as in his sample output (Table II.1, p. 218): in *had been warned* the perfect is on *been* and the passive on *warned*. MFTE also tags the participle, while MAT and pybiber count the auxiliary. The examples allow a detection to be anchored on HAVE or any participle in the same verb sequence. A detection's anchor must overlap a marked piece of the occurrence; its surrounding span does not determine whether it receives credit.
 
 The ud rule also anchors on HAVE. It follows the dependency links to check the predicate and its auxiliaries or copula. In *has been there* and *have you been on a student exchange*, UD makes *there* and *exchange* the heads. The rule uses those heads to find the construction but reports *has* or *Have*, so the non-verbal complements stay outside the brackets.
+
+The contextual rule anchors on participles and is also reused by the contextual past-tense and BE-passive rules. Its patterns draw on MFTE without reproducing temporary retagging. Reuse does not change the perfect feature's definition or exempt the rule from these examples.
