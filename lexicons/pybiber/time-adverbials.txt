@@ -1,0 +1,32 @@
+# title: Time forms accepted with R-prefixed tags by pybiber 0.3.1
+# from: pybiber
+# match: form
+again
+earlier
+early
+eventually
+formerly
+immediately
+initially
+instantly
+late
+lately
+later
+momentarily
+now
+nowadays
+once
+originally
+presently
+previously
+recently
+shortly
+simultaneously
+subsequently
+today
+to-day
+tomorrow
+to-morrow
+tonight
+to-night
+yesterday

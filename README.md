@@ -26,7 +26,7 @@ Work is considerably further along privately but, for initial feedback, I have r
 - Pro-verb do
 - Direct WH-questions
 
-All thirteen carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial, pronoun and pro-verb features have Biber and MAT rules. Direct WH-questions have both a Biber rule and a CLEF contextual proposal.
+All thirteen carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber, MAT and pybiber rules; the pronoun and pro-verb features have Biber and MAT rules. Direct WH-questions have both a Biber rule and a CLEF contextual proposal.
 
 Further Biber features will follow, a few at a time. The catalogue also includes five features used by the contextual past-tense rule: contracted perfect HAD, BE passives, GET passives, possessive and obligation HAVE GOT, and HAVE/NEED TO. They have their own definitions and examples. A broader passive feature brings BE and GET passives together. These additions do not extend the stated coverage of the Biber inventory.
 

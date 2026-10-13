@@ -1,0 +1,18 @@
+# title: Place forms accepted with I-prefixed tags by pybiber 0.3.1
+# from: pybiber
+# match: form
+aboard
+above
+abroad
+across
+alongside
+around
+behind
+below
+beneath
+beside
+inside
+near
+nearby
+outside
+underneath

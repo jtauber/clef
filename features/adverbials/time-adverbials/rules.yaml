@@ -67,3 +67,53 @@ rules:
       As with Biber's rule, unlisted *already* and *then* are missed, while
       listed words can count in nominal, adjectival or clause-introducing
       uses.
+
+  - id: pybiber
+    from: pybiber
+    at: biber_dict.py, FEATURES f_05_time_adverbials; parse_functions.py, _block_regex_features
+    tagsets: {deprel: clearnlp}
+    match:
+      - cql: |
+          [deprel!="punct"
+           & form=".*\b${pybiber/time-adverbials}"%c & xpos="R.*"%c]
+    note: |
+      pybiber 0.3.1 accepts 29 forms with a tag beginning R. Its list omits
+      Biber's *afterwards* and *soon*, and adds *to-day*, *to-morrow* and
+      *to-night*. It requires one token for each listed spelling, so a
+      hyphenated form split into several tokens is not recovered.
+      Standard Penn matches include RB, RBR, RBS and RP; WRB does not match.
+      The prefix test also preserves nonstandard continuations such as RBX.
+
+      There is no lemma or temporal-function test. Nominal and adjectival
+      uses normally fail the tag condition, but mistags and non-temporal
+      uses with a qualifying tag can count. *Already* and *then* are absent.
+      Unlike MAT, pybiber does not exclude *now* after punctuation. *Soon*
+      is absent from the inventory altogether, not conditionally excluded
+      before *as*.
+
+      The source first discards tokens whose form is a single space and
+      tokens tagged `_SP`. It replaces tokens whose dependency relation
+      is exactly `punct`, then lowercases and concatenates forms and tags
+      as `word_tag` strings. Its regex starts
+      at a word boundary before a listed form, so a hyphenated prefix can
+      match: *right-now* supplies *now*, but *rightnow* does not.
+      The reconstruction declares spaCy's ClearNLP-derived relations for
+      the punctuation test; it does not use a dependency-tree pattern.
+
+      This reconstruction tests form and xpos separately. It deliberately
+      omits the source's matches on apparent tags embedded in a form.
+      For example, *today_rb* tagged NN becomes *today_rb_nn* in pybiber and
+      counts as a time adverbial; CLEF does not count it. This is a known
+      reconstruction difference on an unusual supplied form, even if its
+      actual tag begins R. The underscore is part of the supplied form.
+
+      The pattern respects punctuation replacement. The R-prefix test
+      already excludes `_SP`.
+      Matching ignores case for the lexical and tag-prefix tests, as the
+      source's lowercasing does for ordinary English forms and tags.
+
+      Each matching token supplies one anchor. Pybiber returns document
+      counts, not anchors. Multiple regex matches inside a whitespace-
+      containing form, matches buried in malformed tag strings and unusual
+      Unicode lowercasing are not fully reproduced. The source's spaCy
+      parsing and frequency normalization are outside this reconstruction.

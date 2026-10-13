@@ -54,3 +54,56 @@ rules:
       single *north-nowhere* token can count even when tagged NNP. MAT's
       tagger, text preprocessing and other earlier retagging are not
       fully reproduced.
+
+  - id: pybiber
+    from: pybiber
+    at: biber_dict.py, FEATURES f_04_place_adverbials; parse_functions.py, _block_regex_features
+    tagsets: {deprel: clearnlp}
+    match:
+      - cql: |
+          [deprel!="punct"
+           & form=".*\b${pybiber/place-adverbials}"%c & xpos="R.*"%c]
+      - cql: |
+          [deprel!="punct"
+           & form=".*\b${pybiber/place-adverbials-prepositions}"%c & xpos="I.*"%c]
+    note: |
+      pybiber 0.3.1 accepts 42 forms with a tag beginning R, plus a subset
+      of 15 with a tag beginning I. The two lists are recorded separately
+      under lexicons/pybiber. Standard Penn matches include RB, RBR, RBS
+      and RP for the first list and IN for the second; WRB does not match.
+      The prefix tests also preserve matches on nonstandard continuations
+      such as RBX. No lemma or spatial-function test is applied.
+
+      The R-tag list is the same as Biber's 42 forms. The I-tag list includes
+      *outside*, so prepositional *outside the station* can still count
+      against CLEF's conventions. Unlisted *here* and *there* are missed;
+      degree and textual uses can count when their tags qualify.
+
+      The source first discards tokens whose form is a single space and
+      tokens tagged `_SP`. It replaces tokens whose dependency relation
+      is exactly `punct`, then lowercases and concatenates forms and tags
+      as `word_tag` strings. Its regex starts
+      at a word boundary before a listed form, so a hyphenated prefix can
+      match: *north-west* supplies *west*, but *northwest* does not.
+      The reconstruction declares spaCy's ClearNLP-derived relations for
+      the punctuation test; it does not use a dependency-tree pattern.
+
+      This reconstruction tests form and xpos separately. It deliberately
+      omits the source's matches on apparent tags embedded in a form.
+      For example, *west_rb* tagged NN becomes *west_rb_nn* in pybiber and
+      counts as a place adverbial; CLEF does not count it. Likewise,
+      *outside_in* tagged NN counts in pybiber via its I-tag list but not
+      in CLEF. These are known reconstruction differences on unusual
+      supplied forms, even if the actual tag begins R or I. The underscore
+      is part of the supplied form in these examples.
+
+      Both patterns respect punctuation replacement. The tag-prefix tests
+      already exclude `_SP`.
+      Matching ignores case for the lexical and tag-prefix tests, as the
+      source's lowercasing does for ordinary English forms and tags.
+
+      Each matching token supplies one anchor. Pybiber returns document
+      counts, not anchors. Multiple regex matches inside a whitespace-
+      containing form, matches buried in malformed tag strings and unusual
+      Unicode lowercasing are not fully reproduced. The source's spaCy
+      parsing and frequency normalization are outside this reconstruction.
