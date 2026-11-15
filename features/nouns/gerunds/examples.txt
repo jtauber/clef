@@ -1,0 +1,45 @@
+[Swimming] relaxes me.
+She enjoys [reading] novels.
+His [singing] annoyed us.
+They discussed [leaving] early.
+Her favourite activity is [walking].
+Before [leaving], she checked the door.
+They succeeded by [working] together.
+[Swimming] and [running] keep me fit.
+The [singing] of the anthem continued.
+I object to his [smoking] indoors.
+[Being] watched worries her.
+[Having] finished first gave her an advantage.
+She is {swimming}.
+They were {singing}.
+The {running} water was cold.
+{Walking} home, she saw a fox.
+They repaired the tall {building}.
+The {painting} on the wall is blue.
+The {accused} remained silent.
+The word "{swimming}" has eight letters.
+Her [?painting] impressed them.
+    Her activity or an object she painted? The context does not settle it.
+I like [?flying] planes.
+    The activity of piloting planes, or planes that are flying?
+The dog slept.
+
+She enjoys [swimming] and [running].
+[Being] late annoys her.
+[Having] been working all night exhausted him.
+[Having] been being watched made him nervous.
+    The outer nominal form is having; being belongs to its auxiliary chain.
+[Being] watched and recorded worries her.
+    One nominal participle form with coordinated passive lexical heads.
+They discussed [building] a bridge.
+Without [checking] the map, they left.
+She wants to be {swimming}.
+    Swimming belongs to an infinitival progressive complement.
+I think she is {swimming}.
+    A finite progressive clause, despite its complement relation.
+While {walking} home, she saw a fox.
+    An adverbial clause under the feature's conventions.
+The {ceiling} collapsed.
+    An ordinary noun ending in -ing, not a nominal participle form.
+[Singing], [dancing] and [acting] keep her busy.
+    Each coordinated nominal form counts, regardless of attachment depth.

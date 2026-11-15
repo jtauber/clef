@@ -1,0 +1,31 @@
+The [dog] slept.
+Two [houses] stood beside the [river].
+[London] is quiet.
+The [students] went on a [student] [exchange].
+[New] [York] welcomed the [visitors].
+The [teacher]'s [desk] is empty.
+They poured [cement].
+Wait a [moment].
+The [city] grew.
+    These nouns are wrongly removed by the nominalization suffix exclusion.
+She enjoys {reading} [novels].
+The {singing} of the [anthem] continued.
+The {destruction} shocked everyone.
+Her {kindness} helped us.
+The {movement} stopped.
+Her {arrival} surprised us.
+They accepted his {refusal}.
+    The nominalization detector misses arrival and refusal, so a noun tag can retain them.
+His [reply] was brief.
+The [painting] on the [wall] is blue.
+They repaired the tall [building].
+Please mention the [problem].
+She is swimming.
+They can {book} it.
+The [word] "{dog}" has three [letters].
+
+They discussed {building} a [bridge].
+    Building is the gerund here; compare the tall building above.
+The [ceiling] collapsed.
+    The contextual gerund detector can wrongly remove this lexical noun.
+Without {checking} the [map], they left.

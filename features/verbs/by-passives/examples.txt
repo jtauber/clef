@@ -1,0 +1,48 @@
+The parcel [was delivered] by a courier.
+The letters [are collected] by the caretaker.
+The report [is]₁ carefully [checked]₁ by an editor.
+The report [was]₁ very carefully [checked]₁ by an editor.
+The report [was]₁ quite deliberately repeatedly [ignored]₁ by the committee.
+    Three adverbs exceed the printed gap.
+The parcel [was]₁ not [delivered]₁ by a courier.
+The parcel [was]₁n't [delivered]₁ by a courier.
+[Was]₁ he [arrested]₁ by the police?
+[Was]₁ Maria [arrested]₁ by the police?
+[Was]₁ the visitor [arrested]₁ by the police?
+[Was]₁ he unexpectedly [arrested]₁ by the police?
+[Was]₁n't he [arrested]₁ by the police?
+    Whether the question pattern matches depends on whether wasn't is one token or two.
+The bridge has [been repaired] by a local firm.
+The bridge is [being repaired] by a local firm.
+The bridge has been [being inspected] by engineers all morning.
+She objected to [being watched] by strangers.
+The parcel must [be delivered] by a courier.
+I insist that he [be told] by his manager.
+They['re paid] by the agency.
+I['m assigned] a seat by the organiser.
+Lunch['s served] by volunteers.
+    Contracted 's is outside the Biber rule's BE inventory.
+He [got arrested] by the police.
+    A GET passive, outside the Biber detector.
+The house [was destroyed] by fire.
+    The by-phrase expresses a cause; an animate agent is not required.
+The parcel [was delivered] yesterday by a courier.
+    The agentive by-phrase need not immediately follow the participle.
+By whom [was]₁ the parcel [delivered]₁?
+By whom [was]₁ it [written]₁?
+They [were selected] and [interviewed] by the panel.
+    The shared agent phrase applies to both passive predicates.
+The parcel [was collected] by a driver and [was delivered] by a courier.
+The parcel {was sorted}, and the letter [was delivered] by a courier.
+The parcel {was delivered} yesterday.
+The parcel {was delivered} by noon.
+The package {was left} by the door.
+The letter {was signed} by hand.
+    Deadline, location and manner by-phrases do not express the active subject.
+She {got} the car {repaired} by a mechanic.
+    A causative with an object before repaired, not a GET passive.
+A courier delivered the parcel.
+The parcel {delivered} by a courier contained books.
+    A reduced relative without BE or GET, outside this catalogue's passive feature.
+Everyone who {was} there {signed} by noon.
+    The pattern can bridge two clauses and mistake a temporal by-phrase for an agent.

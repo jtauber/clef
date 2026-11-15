@@ -1,0 +1,175 @@
+rules:
+  - id: contextual
+    match:
+      # Nominal and clausal argument positions; noun-tagged -ing forms are candidates too.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            </nsubj(:pass)?|csubj(:pass)?|obj|iobj|obl(:.*)?|nmod|xcomp|ccomp/ {}
+      # Selected prepositions are marked as subordinators in these UD parses.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <advcl {} >mark {lemma:/about|after|at|before|by|for|from|in|of|on|to|upon|with|without/}
+      # Copular nominal predicates; an aux relation instead means progressive here.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            >cop {lemma:be}
+      # A conjunct inherits its immediate head's argument position.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <conj ({} </nsubj(:pass)?|csubj(:pass)?|obj|iobj|obl(:.*)?|nmod|xcomp|ccomp/ {})
+      # A conjunct inherits its immediate head's prepositional complement position.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <conj ({} <advcl {} >mark {lemma:/about|after|at|before|by|for|from|in|of|on|to|upon|with|without/})
+      # A conjunct inherits its immediate head's nominal predicate position.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <conj ({} >cop {lemma:be})
+      # Anchor BE/HAVE/GET in a passive or perfect argument.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} </nsubj(:pass)?|csubj(:pass)?|obj|iobj|obl(:.*)?|nmod|xcomp|ccomp/ {})
+      # The passive/perfect head may itself be a conjunct in that position.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} <conj ({} </nsubj(:pass)?|csubj(:pass)?|obj|iobj|obl(:.*)?|nmod|xcomp|ccomp/ {}))
+      # Anchor BE/HAVE/GET in a passive or perfect prepositional complement.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} <advcl {} >mark {lemma:/about|after|at|before|by|for|from|in|of|on|to|upon|with|without/})
+      # The passive/perfect head may itself be a conjunct in that position.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} <conj ({} <advcl {} >mark {lemma:/about|after|at|before|by|for|from|in|of|on|to|upon|with|without/}))
+    unless:
+      # A lexical head with an auxiliary is not the nominal participle form.
+      - semgrex: |
+          {}
+            >/aux(:pass)?/ {}
+      # A coordinated lexical head also inherits auxiliaries on its immediate head.
+      - semgrex: |
+          {}
+            <conj ({} >/aux(:pass)?/ {})
+      # Do not count an ing auxiliary inside a finite or infinitival auxiliary chain.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} >/aux(:pass)?|cop/ {xpos:/VB|VBD|VBP|VBZ|MD/})
+      # Apply that finite/infinitival check to an immediately coordinated head too.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux(:pass)?|cop/ ({} <conj ({} >/aux(:pass)?|cop/ {xpos:/VB|VBD|VBP|VBZ|MD/}))
+      # In HAVING BEEN BEING/GETTING ..., retain HAVING as the sole nominal form.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|getting/}
+            </aux(:pass)?|cop/ ({} >/aux(:pass)?/ {form:/(?i)having/;xpos:VBG})
+    note: |
+      A CLEF proposal using UD v2 dependencies and Penn POS tags.
+      This is an automatic approximation to the feature, not a reconstruction
+      of Biber's manual decisions. Singular NN and VBG forms ending in -ing
+      are candidates in nominal/clausal argument positions. A passive or
+      perfect construction is anchored on VBG being/having/getting, identified
+      by spelling rather than depending on the supplied auxiliary lemma;
+      finite and infinitival auxiliary chains are excluded. HAVING takes
+      precedence over an inner BE/GET form. Copular nominal predicates count
+      when the parse distinguishes them from progressive predicates.
+      Coordination inherits a qualifying position through one conj edge;
+      longer attachment chains are not followed. Clausal complements and
+      noun-tagged -ing forms remain broad candidate classes. Dependencies
+      cannot reliably distinguish activities from objects, lexical -ing
+      nouns from participle forms, or word mentions from uses. These can
+      produce false positives; parser errors, nonstandard spellings and
+      unsupported dependency structures can produce misses.
+      The marked-advcl branch covers only the listed prepositions. Other
+      adverbial clauses, including unmarked supplements and WHILE clauses,
+      are excluded. A parser may still label a nominal predicate as a
+      progressive or misidentify a preposition's complement.
+
+  - id: contextual-spacy
+    tagsets: {deprel: clearnlp}
+    match:
+      # Nominal and clausal argument positions; noun-tagged -ing forms are candidates too.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            </nsubj|nsubjpass|csubj|csubjpass|dobj|iobj|dative|pobj|pcomp|xcomp|ccomp/ {}
+      # Nominal predicates are attr dependents of BE in this scheme.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <attr {lemma:be}
+      # A conjunct inherits its immediate head's argument position.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <conj ({} </nsubj|nsubjpass|csubj|csubjpass|dobj|iobj|dative|pobj|pcomp|xcomp|ccomp/ {})
+      # A conjunct inherits its immediate head's nominal predicate position.
+      - semgrex: |
+          {xpos:/NN|VBG/;form:/(?i).+ing/}
+            <conj ({} <attr {lemma:be})
+      # Anchor BE/HAVE/GET in a passive or perfect argument.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux|auxpass/ ({} </nsubj|nsubjpass|csubj|csubjpass|dobj|iobj|dative|pobj|pcomp|xcomp|ccomp/ {})
+      # The passive/perfect head may itself be a conjunct in that position.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux|auxpass/ ({} <conj ({} </nsubj|nsubjpass|csubj|csubjpass|dobj|iobj|dative|pobj|pcomp|xcomp|ccomp/ {}))
+    unless:
+      # A lexical head with an auxiliary is not the nominal participle form.
+      - semgrex: |
+          {}
+            >/aux|auxpass/ {}
+      # A coordinated lexical head also inherits auxiliaries on its immediate head.
+      - semgrex: |
+          {}
+            <conj ({} >/aux|auxpass/ {})
+      # Do not count an ing auxiliary inside a finite or infinitival auxiliary chain.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux|auxpass/ ({} >/aux|auxpass/ {xpos:/VB|VBD|VBP|VBZ|MD/})
+      # Apply that finite/infinitival check to an immediately coordinated head too.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|having|getting/}
+            </aux|auxpass/ ({} <conj ({} >/aux|auxpass/ {xpos:/VB|VBD|VBP|VBZ|MD/}))
+      # In HAVING BEEN BEING/GETTING ..., retain HAVING as the sole nominal form.
+      - semgrex: |
+          {xpos:VBG;form:/(?i)being|getting/}
+            </aux|auxpass/ ({} >/aux|auxpass/ {form:/(?i)having/;xpos:VBG})
+    note: |
+      A CLEF proposal using spaCy's ClearNLP-derived dependencies and Penn POS tags.
+      This is an automatic approximation to the feature, not a reconstruction
+      of Biber's manual decisions. Singular NN and VBG forms ending in -ing
+      are candidates in nominal/clausal argument positions. A passive or
+      perfect construction is anchored on VBG being/having/getting, identified
+      by spelling rather than depending on the supplied auxiliary lemma;
+      finite and infinitival auxiliary chains are excluded. HAVING takes
+      precedence over an inner BE/GET form. Copular nominal predicates count
+      when the parse distinguishes them from progressive predicates.
+      Coordination inherits a qualifying position through one conj edge;
+      longer attachment chains are not followed. Clausal complements and
+      noun-tagged -ing forms remain broad candidate classes. Dependencies
+      cannot reliably distinguish activities from objects, lexical -ing
+      nouns from participle forms, or word mentions from uses. These can
+      produce false positives; parser errors, nonstandard spellings and
+      unsupported dependency structures can produce misses.
+      Prepositional complements use pobj/pcomp; nominal predicates use
+      attr under BE. No UD labels are translated or treated as equivalent
+      input tags. Parser disagreements with the UD variant remain visible.
+
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section E, no. 15, p. 227
+    match:
+      - manual: |
+          Read the whole supplied text and mark each participle form serving
+          a nominal function, applying this feature's counting conventions.
+          Mark the form itself, not its full phrase. Record coordinated forms
+          as separate occurrences. Distinguish nominal activity or event uses
+          from progressive, adjectival and adverbial uses and from lexical
+          nouns naming objects or results. If the context leaves a decision
+          unresolved, keep the annotation incomplete and explain it in a note.
+          Mark the record complete only after reviewing the entire text;
+          a completed record may contain no occurrences.
+    note: |
+      Biber edited gerunds by hand; no automatic detector is supplied. These
+      instructions operationalize that manual step using CLEF's conventions.
+      They do not reproduce an unavailable original annotation protocol.
+      Detection records are separate from the gold examples. Missing or
+      incomplete records make this rule, and rules depending on it, unavailable.

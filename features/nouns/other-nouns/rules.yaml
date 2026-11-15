@@ -1,0 +1,50 @@
+rules:
+  - id: contextual
+    match:
+      - cql: |
+          [xpos="NN|NNS|NNP|NNPS"]
+    unless:
+      - use: nominalizations/biber
+      - use: gerunds/contextual
+    note: |
+      A CLEF proposal using supplied Penn noun tags, Biber's nominalization
+      suffix test and the contextual gerund detector. It needs no manual
+      annotations. The gerund dependency scheme is inherited through the
+      reference. Errors in either exclusion propagate here: lexical -ing
+      nouns may be removed as gerunds, and suffix overcounts remove nouns
+      such as cement and city. Nominalizations outside Biber's suffix
+      inventory and gerunds missed by the parser or rule can remain.
+
+  - id: contextual-spacy
+    match:
+      - cql: |
+          [xpos="NN|NNS|NNP|NNPS"]
+    unless:
+      - use: nominalizations/biber
+      - use: gerunds/contextual-spacy
+    note: |
+      A CLEF proposal using supplied Penn noun tags, Biber's nominalization
+      suffix test and the contextual-spacy gerund detector. It needs no manual
+      annotations. The gerund dependency scheme is inherited through the
+      reference. Errors in either exclusion propagate here: lexical -ing
+      nouns may be removed as gerunds, and suffix overcounts remove nouns
+      such as cement and city. Nominalizations outside Biber's suffix
+      inventory and gerunds missed by the parser or rule can remain.
+
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section E, no. 16, p. 228
+    match:
+      - cql: |
+          [xpos="NN|NNS|NNP|NNPS"]
+    unless:
+      - use: nominalizations/biber
+      - use: gerunds/biber
+    note: |
+      Biber counts dictionary nouns excluding nominalizations and gerunds.
+      Supplied Penn noun tags approximate the unavailable dictionary and
+      tagging pipeline; they are not a reconstruction of its lexical coverage.
+      The exclusions use the named Biber rules. Suffix overcounts and misses
+      therefore propagate into this residual category. Complete independent
+      gerund annotation is required for the entire text, even when there are
+      no noun candidates. A manual piece excludes any overlapping noun anchor.

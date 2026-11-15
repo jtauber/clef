@@ -132,13 +132,13 @@ rules:
 |---|---|
 | `id` | required; lower case with hyphens, unique in the file |
 | `match` | a list of patterns producing candidate occurrences |
-| `unless` | a list of exclusion patterns; a candidate is dropped when its anchor token is also an exclusion match’s anchor |
+| `unless` | a list of exclusion patterns; a candidate is dropped when its detection overlaps an exclusion detection (the same anchor token for token patterns) |
 | `from` | the citation key of the publication or tool whose rule this is; left out for a rule CLEF proposes |
 | `at` | where in that work: page, file and line |
 | `tagsets` | the tagsets the rule’s patterns use, where they differ from the defaults (section 5.1) |
 | `note` | Markdown: known misses and over-counts, and why the rule is written as it is |
 
-Each entry under `match` or `unless` has exactly one key: `cql`, `semgrex` or `use`. The first two contain a pattern; `use` references a particular feature rule (section 5.4). Write patterns as YAML literal blocks (`cql: |`): YAML applies no escaping inside them, so what you type is what the engine sees.
+Each entry under `match` or `unless` has exactly one key: `cql`, `semgrex`, `use` or `manual`. The first two contain a pattern; `use` references a particular feature rule (section 5.4); `manual` contains human annotation instructions (section 5.5). A direct manual rule has one `match` entry and no `unless` or `tagsets`. Compose its results with other rules through `use`. Write patterns as YAML literal blocks (`cql: |`): YAML applies no escaping inside them, so what you type is what the engine sees.
 
 ### Whose rule it is
 
@@ -150,15 +150,15 @@ Every rule is measured against the same annotated examples, using input annotati
 
 ### Occurrences and anchors
 
-Every match produces a candidate occurrence with a **span**, containing the match and its context, and an **anchor**, a single token identifying what the rule has detected.
+A token-pattern match produces a candidate occurrence with a **span**, containing the match and its context, and an **anchor**, a single token identifying what the rule has detected.
 
 | Pattern | Span | Anchor |
 |---|---|---|
 | `cql` | the whole match | the token marked `@`; for a single-token pattern, that token is the implicit anchor |
 | `semgrex` | from the leftmost to the rightmost matched node | the pattern’s first node |
-| `use` | the referenced rule's surviving matches and their context | the rule's anchors after its own exclusions |
+| `use` | the referenced rule's surviving matches and their context | the rule's anchors after its own exclusions, or its manual occurrence pieces |
 
-Every pattern must produce exactly one anchor token per match. A CQL pattern that can match more than one token must explicitly mark its anchor with `@`. This requirement applies to both `match` and `unless` patterns.
+Every CQL or Semgrex pattern must produce exactly one anchor token per match. A CQL pattern that can match more than one token must explicitly mark its anchor with `@`. This requirement applies to both `match` and `unless` patterns.
 
 Anchors determine exclusions, counting and evaluation:
 
@@ -168,14 +168,16 @@ Anchors determine exclusions, counting and evaluation:
 
 An exclusion can therefore name context without excluding that context. For example, `@[form="did"%c] [xpos="VB.*"]` excludes a candidate anchored on *did*, not one anchored on the following verb.
 
-A detection has one anchor token. An annotated occurrence may have several marked pieces, allowing different rules to identify the same construction through different anchor positions. The span remains available for displaying the detection in context.
+A token-pattern detection has one anchor token. An annotated occurrence may have several marked pieces, allowing different rules to identify the same construction through different anchor positions. The span remains available for displaying the detection in context.
+
+Manual detections instead have one or more character-offset pieces identifying one occurrence. They need no token anchor. Each occurrence counts once, even if its pieces overlap several tokens. When composing rules, drop a candidate if any of its detection pieces overlaps any exclusion piece. Identical surviving piece lists count once; do not split a manual occurrence into token detections. For automatic patterns, each anchor supplies one piece, so this preserves the same-anchor exclusion and deduplication rules above.
 
 
 
 
 ## 5. Patterns
 
-Evaluate patterns within individual sentences, using the sentence boundaries supplied by the annotation pipeline. A match, including its context and any exclusion pattern, must stay within one sentence. CQL `<s>` marks the start of that sentence. Apply exclusions and merge duplicate anchors within each sentence before summing counts for the text.
+Evaluate CQL and Semgrex patterns within individual sentences, using the sentence boundaries supplied by the annotation pipeline. A match, including its context and any exclusion pattern, must stay within one sentence. CQL `<s>` marks the start of that sentence. Apply exclusions and merge duplicate anchors within each sentence before summing counts for the text.
 
 ### 5.1 Annotation layers
 
@@ -260,7 +262,7 @@ unless:
   - use: have-need-to/contextual
 ```
 
-Evaluate the referenced rule within the same supplied sentence as its caller. Apply its own exclusions and merge duplicate anchors before returning the result. A reference under `match` contributes those anchors as candidates; under `unless` it excludes candidates with the same anchors. It never removes the whole surrounding phrase or changes any input annotation. Reuse contributes only to the calling rule's result; feature counts are still evaluated separately, without adding dependency counts to the caller.
+Evaluate referenced token patterns within the same supplied sentence as their caller; retrieve manual results for the same complete underlying text. Apply the referenced rule’s own exclusions and merge duplicate detections before returning the result. A reference under `match` contributes those detections as candidates; under `unless` it excludes candidates overlapping those detections (the same anchor for token patterns). It never removes the whole surrounding phrase or changes any input annotation. Reuse contributes only to the calling rule's result; feature counts are still evaluated separately, without adding dependency counts to the caller.
 
 Anchor choice is part of the referenced rule's behaviour. In *She had left*, the contextual perfect rule anchors on *left*, so the past-tense rule can exclude that participle while retaining *had*. Another perfect rule anchored on HAVE would not be an interchangeable exclusion. References cannot override anchors or select another rule as a fallback.
 
@@ -269,6 +271,44 @@ References can nest and may point to rules declared later in the catalogue, incl
 Each rule declares its own nondefault tagsets. Its defaults are those in section 5.1, independent of its caller. Rules require compatible annotation schemes for all their direct patterns and all referenced rules, including exclusions. Conflicting requirements or an explicit caller declaration that contradicts a referenced rule's requirement are invalid; callers cannot reinterpret another rule's tags.
 
 Feature definitions, counting conventions and examples remain independent of their detection methods. A reused rule is evaluated against its own feature's examples as well as contributing to its callers. Provenance remains attached to each rule: referencing a reconstruction does not automatically make the caller a reconstruction of the same source. All rules must be valid, including ones not referenced elsewhere.
+
+### 5.5 Manual annotation
+
+A `manual` entry supplies instructions for a human annotator instead of a token query:
+
+```yaml
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section E, no. 15, p. 227
+    match:
+      - manual: |
+          Mark each participle form serving a nominal function,
+          applying this feature's counting conventions.
+```
+
+The instructions specify how to find and mark occurrences, including borderline cases. They are not executable code. A consuming application supplies the results separately from `examples.txt`, keyed by the exact underlying text and the explicit feature and rule ids. A YAML or JSON bundle has this shape:
+
+```yaml
+format: 1
+annotations:
+  - feature: gerunds
+    rule: biber
+    status: complete
+    text: Swimming relaxes me.
+    occurrences:
+      - pieces: [[0, 8]]
+```
+
+`format` is the integer 1. Each record requires `feature`, `rule`, `text` and `status`, and identifies a direct manual rule in the catalogue. There can be only one record for each feature/rule/text combination. Optional `annotator` and `note` fields contain nonempty text for attribution and explanations. No other bundle or record fields are defined in this version.
+
+`status` is `complete` or `incomplete`. A complete record requires an `occurrences` list, which may be empty: `complete` with `occurrences: []` means the whole text was reviewed and no occurrences were found. An incomplete record may omit the list or retain partial work, but none of its occurrences are evaluated. Missing and incomplete records mean not evaluated, never zero. If a decision cannot be resolved from the text, leave the record incomplete and explain it in `note`.
+
+Each occurrence has only a `pieces` list of one or more `[start, end]` pairs. These are half-open, zero-based Unicode character offsets into the exact `text`, not bytes or UTF-16 code units. Offsets must be integers, with `0 <= start < end <= len(text)`. Within an occurrence, pieces are ordered and non-overlapping; gaps permit discontinuous occurrences. Duplicate occurrences are invalid. Different occurrences may overlap, but each is counted and scored separately. Mark only the parts identifying the occurrence, following the feature's conventions, rather than surrounding context.
+
+Manual annotations cover the whole supplied text, independently of parser tokenization. A manual rule can be evaluated without a parser. A rule using its results also needs a complete annotation for that same text, whether the reference appears under `match` or `unless`, even if another pattern returns no candidates. This requirement propagates through nested references. Automatic patterns in such a rule still run sentence by sentence.
+
+Catalogue examples are evaluation targets, not manual detection results. Do not copy their marked pieces into a manual record to manufacture an evaluation. Human results must be collected separately; reports should distinguish them from parser-derived results and from the gold annotations used for scoring.
 
 ## 6. Lexicons
 
@@ -331,14 +371,14 @@ Mark the parts of the construction on which a correct detection may be anchored.
 
 To recover the text passed to a rule, remove the annotation brackets, the `?` markers introducing unresolved pieces, and the subscript labels. Preserve the enclosed text and all other characters, including whitespace and punctuation. For example, `She['s left].` becomes `She's left.`. The marked pieces retain their character positions in this underlying text.
 
-Evaluate each rule separately, after exclusions and the merging of candidates with the same anchor described in section 4. A detection can match an annotated occurrence when its anchor token overlaps at least one of that occurrence’s marked pieces in character positions. Its surrounding span plays no part in scoring.
+Evaluate each rule separately, after exclusions and the merging of candidates with the same anchor described in section 4. A detection can match an annotated occurrence when its anchor token, or any of its manual detection pieces, overlaps at least one of that occurrence’s marked pieces in character positions. Its surrounding span plays no part in scoring.
 
-1. Pair detections with definite annotated occurrences, matching as many occurrences as possible. Each detection and each occurrence may be paired only once. Each pair is a true positive. Among equally large pairings, maximise the number of paired detections whose anchors do not overlap unresolved pieces.
+1. Pair detections with definite annotated occurrences, matching as many occurrences as possible. Each detection and each occurrence may be paired only once. Each pair is a true positive. Among equally large pairings, maximise the number of paired detections whose detection pieces do not overlap unresolved pieces.
 2. Each unpaired definite occurrence is a false negative.
-3. An unpaired detection whose anchor overlaps an unresolved piece is not scored.
-4. Every other unpaired detection is a false positive. If its anchor overlaps a distractor piece, it is a known false positive.
+3. An unpaired detection overlapping an unresolved piece is not scored.
+4. Every other unpaired detection is a false positive. If its detection overlaps a distractor piece, it is a known false positive.
 
-Finding several pieces of one occurrence does not earn several true positives. For example, separate detections anchored on *has* and *left* in the second example give one true positive and one false positive. A detection anchored on *left* is not penalised merely because its surrounding span includes the distractor *expected*.
+A manual detection with several pieces enters the pairing once, as one detection. Finding several pieces of one gold occurrence through separate detections does not earn several true positives. For example, separate detections anchored on *has* and *left* in the second example give one true positive and one false positive. A detection anchored on *left* is not penalised merely because its surrounding span includes the distractor *expected*.
 
 Examples describe the **feature**, not a particular rule. When a rule fails an example, the failure is evidence of where that rule falls short. Notes say why an example is tricky, not what the feature is.
 

@@ -1,0 +1,44 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section F, no. 17, p. 228; notation on p. 222; Table II.1, pp. 218–219
+    match:
+      # BE followed by up to two adverbs and a past form.
+      - cql: |
+          [form="be|am|is|are|was|were|being|been|['’]m|['’]re|isn['’]t|aren['’]t|wasn['’]t|weren['’]t"%c]
+          [xpos="RB.*"]{0,2}
+          @[xpos="VBD|VBN"]
+      # The question pattern allows one noun or pronoun token.
+      - cql: |
+          [form="be|am|is|are|was|were|being|been|['’]m|['’]re|isn['’]t|aren['’]t|wasn['’]t|weren['’]t"%c]
+          [xpos="NN.*|PRP.*"]
+          @[xpos="VBD|VBN"]
+    unless:
+      - use: by-passives/biber
+    note: |
+      Reconstruct the two BE patterns on p. 228, anchoring on the passive
+      participle as in Table II.1. Exclude the same-anchor by-passive
+      detections, so the two Biber rules cannot count the same token.
+
+      BE is matched by form, ignoring case, including its listed positive
+      and negative contractions. Both apostrophe styles are accepted. Bare
+      *be* is absent from the inventory on p. 222 but is included here:
+      Table II.1 tags *would be challenged* as passive. Contracted *'s*
+      is not in the printed BE inventory and is not added.
+
+      Biber's VBN includes past tense forms, so both VBD and VBN qualify.
+      RB.* approximates ADV; NN.* and PRP.* approximate N/PRO. These tags
+      do not reproduce his dictionary categories or earlier disambiguation
+      and manual correction. No POS constraint is imposed on BE itself.
+
+      Fused negative BE forms use one token; a separate *n't* or *not*
+      uses an adverb slot when tagged RB.*. The question pattern has no
+      such slot, so split negation can prevent a match. Tokenizations are
+      not normalized. Longer subjects, longer adverb gaps and coordination
+      without a repeated BE are not added to the printed patterns.
+
+      A following *by* excludes the candidate regardless of its meaning.
+      A delayed or fronted agent phrase is not found. GET passives are
+      missed; adjectival uses and cross-clause matches can overcount.
+      Evaluation is sentence-local and uses the supplied annotations;
+      Biber's original program and output have not been reproduced.

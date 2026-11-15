@@ -1,0 +1,15 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section E, no. 14, p. 227
+    match:
+      - cql: |
+          [form=".*(tions?|ments?|ness(es)?|it(y|ies))"%c]
+    note: |
+      Biber counts words with these endings, including plural forms, without
+      a POS condition. The test is case-insensitive and matches the whole
+      supplied token. It can count non-nominalizations such as cement, moment
+      and city, verbal uses such as mention, and proper names. It misses
+      nominalizations with other endings and depends on tokenization for
+      compounds and possessives. No output from Biber's original tagger has
+      been verified.

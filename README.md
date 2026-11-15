@@ -4,13 +4,13 @@ CLEF is a unified, structured, machine-readable catalogue of linguistic features
 
 CLEF synthesizes feature sets from multiple sources and will allow the addition of contributed features and detection rules. Each feature has a human-readable definition, machine-readable detection rules, annotated examples, and source provenance. The catalogue is implementation-agnostic: it defines what each feature is and how to detect it declaratively.
 
-Detection rules so far include matching text, lemma, POS tag, or more complex corpus query patterns (CQL) and dependency tree patterns (Semgrex). Work is also planned to support semantic tagging (USAS), and LLM-based and human annotation.
+Detection rules so far include matching text, lemma, POS tag, or more complex corpus query patterns (CQL) and dependency tree patterns (Semgrex). Work is also planned to support semantic tagging (USAS), and LLM-based annotation. Human annotation rules provide instructions and consume separately supplied occurrence records.
 
 The forthcoming companion library `pyclef` will provide a Python engine that interprets the catalogue’s rules against text using pluggable taggers. Others are free to also build implementations that consume this catalogue.
 
 ## This release
 
-Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first thirteen of the 67 features in Biber (1988):
+Work is considerably further along privately but, for initial feedback, I have released this proof-of-concept which defines the first eighteen of the 67 features in Biber (1988):
 
 - Past tense
 - Perfect aspect
@@ -25,8 +25,13 @@ Work is considerably further along privately but, for initial feedback, I have r
 - Indefinite pronouns
 - Pro-verb do
 - Direct WH-questions
+- Nominalizations
+- Gerunds
+- Other nouns
+- Agentless passives
+- By-passives
 
-All thirteen carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber, MAT and pybiber rules; the pronoun and pro-verb features have Biber and MAT rules. Direct WH-questions have both a Biber rule and a CLEF contextual proposal.
+All eighteen carry the `biber-1988` tag; coverage of that inventory is currently partial. Past tense, present tense and perfect aspect have MAT, MFTE and pybiber reconstructions; perfect aspect also has a Biber rule. The adverbial features have Biber, MAT and pybiber rules; the pronoun and pro-verb features have Biber and MAT rules. Direct WH-questions have both a Biber rule and a CLEF contextual proposal. The three nominal-form features have Biber rules: a suffix test for nominalizations, human annotation for gerunds, and a noun-tag approximation to Biber’s dictionary lookup for other nouns. The Biber other-nouns rule excludes the results of the first two Biber rules and requires completed gerund annotations; missing annotation is not treated as zero. Gerunds and other nouns also have automatic contextual rules, with explicit variants for UD and spaCy dependencies. Agentless passives and by-passives have Biber rules that distinguish BE sequences by whether *by* immediately follows the participle; their notes document the limits of that test.
 
 Further Biber features will follow, a few at a time. The catalogue also includes five features used by the contextual past-tense rule: contracted perfect HAD, BE passives, GET passives, possessive and obligation HAVE GOT, and HAVE/NEED TO. They have their own definitions and examples. A broader passive feature brings BE and GET passives together. These additions do not extend the stated coverage of the Biber inventory.
 
@@ -36,7 +41,9 @@ Past tense also has a `contextual` rule alongside the `mfte` reconstruction. It 
 
 The `contextual` direct WH-question rule uses word order, POS tags and punctuation to cover inverted, subject, elliptical and echo questions. It counts the first WH-word in each question clause and retains the Biber reconstruction for comparison. Its notes distinguish these heuristics from a full grammatical analysis.
 
-Features can declare strictly broader features with `subsumed_by` in their definitions. BE and GET passives are subsumed by passives; contracted perfect HAD is subsumed by past tense. These relationships describe feature occurrences independently of detection rules. The validation report presents their transitive reduction as a Hasse diagram.
+The contextual gerund rules use nominal and clausal dependency positions, auxiliary structure and limited coordination to identify nominal participle forms. Their other-noun counterparts exclude those detections automatically. The report presents the UD (`contextual`) and spaCy (`contextual-spacy`) variants in the Contextual column under the matching parser selection. Activity-versus-object readings and parser ambiguities remain documented limits; the separate Biber methods retain the manual annotation step.
+
+Features can declare strictly broader features with `subsumed_by` in their definitions. BE passives, GET passives, agentless passives and by-passives are subsumed by passives; contracted perfect HAD is subsumed by past tense. Auxiliary choice and the presence of an agentive by-phrase are separate distinctions: the two Biber features include BE and GET occurrences even though their Biber detectors only test BE. These relationships describe feature occurrences independently of detection rules. The validation report presents their transitive reduction as a Hasse diagram.
 
 ## Validation
 

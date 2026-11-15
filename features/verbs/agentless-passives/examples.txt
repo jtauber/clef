@@ -1,0 +1,52 @@
+The parcel [was delivered] yesterday.
+The letters [are collected] every morning.
+The report [is]₁ carefully [checked]₁.
+The report [was]₁ very carefully [checked]₁.
+The report [was]₁ quite deliberately repeatedly [ignored]₁.
+    Three adverbs exceed the printed gap.
+The parcel [was]₁ not [delivered]₁.
+The parcel [was]₁n't [delivered]₁.
+    A separate n't token occupies an adverb slot when tagged RB.
+[Was]₁ he [arrested]₁?
+[Was]₁ Maria [arrested]₁?
+[Was]₁ the visitor [arrested]₁?
+    The subject has two tokens; the question pattern allows only one.
+[Was]₁ he unexpectedly [arrested]₁?
+[Was]₁n't he [arrested]₁?
+    The printed question sequence can match fused wasn't but not split was + n't.
+The bridge has [been repaired].
+The bridge is [being repaired].
+The bridge has been [being inspected] all morning.
+She objected to [being watched].
+The parcel must [be delivered] today.
+    Bare be is supported by Biber's tagged sample despite its omission from his BE inventory.
+I insist that he [be told].
+They['re paid] every Friday.
+I['m assigned] a seat at registration.
+Lunch['s served] at noon.
+    Contracted 's is outside the Biber rule's BE inventory.
+He [got arrested] yesterday.
+    A GET passive, outside the Biber detector.
+They [were selected] and [interviewed].
+    Each passive predicate counts; the rule misses the second without its own BE.
+The parcel [was delivered] and the letter [was collected].
+The parcel [was sorted], and the letter {was delivered} by a courier.
+The parcel [was delivered] by noon.
+    By noon gives a deadline, not an agent.
+The package [was left] by the door.
+The letter [was signed] by hand.
+The parcel {was delivered} by a courier.
+The parcel {was delivered} yesterday by a courier.
+    The agent is expressed even though by does not immediately follow the participle.
+By whom {was} the parcel {delivered}?
+They {were selected} and {interviewed} by the panel.
+    The by-phrase applies to both passive predicates.
+The door [?was closed].
+    Without more context, a closing event or a description of its state.
+The door {was open}.
+She {got} the car {repaired}.
+They delivered the parcel yesterday.
+The parcel {delivered} yesterday contained books.
+    A reduced relative without BE or GET, outside this catalogue's passive feature.
+Everyone who {was} there {signed} the card.
+    Was and signed belong to different clauses; the adverb gap can bridge them.

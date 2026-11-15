@@ -1,0 +1,28 @@
+The [destruction] shocked everyone.
+Her [kindness] helped us.
+The [movement] stopped.
+Their [ability] impressed me.
+Several [decisions] followed.
+    The ending -sion is outside the printed -tion family.
+The [improvements] took months.
+Different [illnesses] require different [treatments].
+The [illnesses] required several [treatments].
+Their [abilities] differ.
+[KINDNESS] matters.
+Her [arrival] surprised us.
+They accepted his [refusal].
+His {reply} was brief.
+    A noun without a nominalizing suffix, treated as an other noun.
+The [construction] of the bridge took years.
+The [development] was rapid.
+They poured {cement}.
+Wait a {moment}.
+The {city} grew.
+Please {mention} the problem.
+    Mention is a verb here, despite its matching ending.
+{Felicity} arrived.
+    A person's name in this example.
+The string "{tion}" ends in four letters.
+{Swimming} relaxes me.
+    A gerund, handled as a separate feature.
+The dog slept.

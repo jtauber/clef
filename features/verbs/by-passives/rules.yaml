@@ -1,0 +1,42 @@
+rules:
+  - id: biber
+    from: biber_1988
+    at: Appendix II, section F, no. 18, p. 228; notation on p. 222; Table II.1, pp. 218–219
+    match:
+      # BE, up to two adverbs, a past form, then immediately BY.
+      - cql: |
+          [form="be|am|is|are|was|were|being|been|['’]m|['’]re|isn['’]t|aren['’]t|wasn['’]t|weren['’]t"%c]
+          [xpos="RB.*"]{0,2}
+          @[xpos="VBD|VBN"]
+          [form="by"%c]
+      # The question pattern allows one noun or pronoun token.
+      - cql: |
+          [form="be|am|is|are|was|were|being|been|['’]m|['’]re|isn['’]t|aren['’]t|wasn['’]t|weren['’]t"%c]
+          [xpos="NN.*|PRP.*"]
+          @[xpos="VBD|VBN"]
+          [form="by"%c]
+    note: |
+      Reconstruct the two patterns on p. 228 with the optional *by* present,
+      anchoring on the participle. The same BE and POS choices are used
+      in `agentless-passives/biber`, which excludes these detections.
+
+      BE includes the listed contractions, accepting either apostrophe
+      style. Bare *be* is included because Table II.1 tags *would be
+      challenged* as passive, although the p. 222 BE list omits it.
+      Contracted *'s* is not added. Matching BE and BY ignores case and
+      requires no POS tag on either token.
+
+      VBD or VBN represents Biber's broad VBN category; RB.* represents
+      ADV, and NN.* or PRP.* represents N/PRO. These are approximations
+      using supplied tags, not a recreation of his dictionary, earlier
+      disambiguation or manual correction. Split negation consumes an
+      adverb slot and is not accommodated in the question pattern;
+      fused negative BE forms can match directly.
+
+      BY must immediately follow the participle. Its meaning, complement
+      and attachment are not checked, so *by noon*, *by the door* and
+      *by hand* can produce false positives. A delayed or fronted agent
+      phrase is missed. GET passives, longer subjects, longer adverb gaps
+      and coordination without a repeated BE are not added. Adjectival
+      uses and cross-clause matches can overcount. Evaluation remains
+      sentence-local; the original program and output are not reproduced.
