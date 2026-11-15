@@ -5,6 +5,7 @@ rules:
       - cql: |
           (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
           [xpos="IN|TO"]{0,2}
+          [form="exactly"%c & xpos="RB.*"]{0,1}
           @[form="who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however"%c & xpos="W.*"]
           [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
           (
@@ -62,7 +63,22 @@ rules:
           @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
           [xpos!="V.*|MD|``|''" & form!="[.!?;:]"]*
           [form="\?"]
+      # A WH pronoun is the subject of the sentence's finite root verb.
+      - semgrex: |
+          {form:/(?i)who|what|which|whose/;xpos:/W.*/}
+            <nsubj {deprel:root;xpos:/VBD|VBP|VBZ/}
+      # A complete two-token question can be parsed as interrogative WHAT plus a relative clause.
+      - cql: |
+          <s>
+          @[form="what"%c & xpos="WP" & deprel="root" & feats.PronType="Int"]
+          [xpos="VBD|VBP|VBZ" & deprel="acl:relcl"]
+          </s>
     unless:
+      # A promoted free-relative WH head can itself be the main verb's subject.
+      - semgrex: |
+          {form:/(?i)who|what|which|whose/;xpos:/W.*/}
+            <nsubj {deprel:root;xpos:/VBD|VBP|VBZ/}
+            >acl:relcl {}
       # Keep the first WH-word in a coordinated phrase as its sole anchor.
       - cql: |
           [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
@@ -74,7 +90,8 @@ rules:
           @[form="who|whom|whose|which"%c & xpos="W.*"]
           [form!="[.!?;:,]" & xpos!="``|''"]* [form=","]
     note: |
-      A CLEF proposal using Penn POS tags, auxiliary lemmas and word order.
+      A CLEF proposal using UD v2 dependencies, Penn POS tags, auxiliary
+      lemmas and word order.
       Fronted questions allow punctuation, an opening quote or AND/OR/BUT
       before the WH-phrase, and up to two fronted prepositions. Nominal,
       adjectival, adverbial and prepositional tokens can extend the phrase.
@@ -84,13 +101,35 @@ rules:
 
       Inversion uses a modal or finite BE/HAVE/DO, optionally followed by
       negation, then a likely subject onset. This branch does not require
-      a question mark. Split auxiliary and negative contractions are
-      accepted, including either apostrophe. A WH-word fused with its
-      auxiliary in a single token is not normalized.
+      a question mark. It permits one adverb-tagged EXACTLY immediately
+      before the WH-word, as in *exactly where is the exit?*, while keeping
+      the boundary requirement and anchoring on the WH-word. Other
+      pre-WH modifiers are not added by this exception. Split auxiliary and
+      negative contractions are accepted, including either apostrophe.
+      A WH-word fused with its auxiliary in a single token is not normalized.
 
-      Subject questions, HOW MANY/MUCH subjects, WHY with a bare infinitive,
-      elliptical questions and echoes require a following question mark.
-      Their lookahead cannot cross a period, exclamation mark, semicolon,
+      A dependency alternative recognizes WHO/WHAT/WHICH/WHOSE when the
+      WH-word is an nsubj dependent of a VBD/VBP/VBZ sentence root. It
+      anchors on that WH-word without requiring a question mark. Thus
+      *Who called* counts. A WH subject of a subordinate predicate does
+      not qualify. A root-linked WH-word with a relative-clause dependent
+      is excluded too: parsers can promote WHAT in a free relative such
+      as *What happened surprised me*. This alternative covers direct
+      subjects of finite root verbs only; it does not follow determiners,
+      conjuncts, auxiliaries or copulas.
+
+      A narrow fallback covers exactly two tokens occupying the whole
+      supplied sentence: WHAT tagged WP, root and PronType=Int, followed
+      by a VBD/VBP/VBZ token tagged acl:relcl. This recovers *What happened*
+      and *What matters* when UD analyses their verbs as relative clauses.
+      The fallback requires UD morphology as well as dependencies. Relative
+      PronType=Rel forms and larger sentences do not qualify. It does not
+      reinterpret or rewrite the supplied parse.
+
+      The sequential subject-question patterns, HOW MANY/MUCH subjects,
+      WHY with a bare infinitive, elliptical questions and echoes still
+      require a following question mark. Their lookahead cannot cross a
+      period, exclamation mark, semicolon,
       colon or quotation mark. Echoes require a subject and finite verb
       before the first WH-word, with no later verb before the question mark.
       WHETHER is excluded; -ever forms are included only in the inversion
@@ -98,9 +137,156 @@ rules:
       a noun or personal pronoun are excluded.
 
       These are local heuristics, not a full clause analysis. Supplied POS
-      tags and lemmas affect the result. Unpunctuated subject questions such
-      as *Who called* are missed, as are some complex subject phrases,
-      auxiliary chains in echoes and -ever questions without inversion.
+      tags, lemmas and dependencies affect the result. Root attachment is
+      evidence for a standalone question, not proof of interrogative meaning.
+      Fragmentary relatives, word mentions and parser errors can remain
+      ambiguous. An isolated title or nominal fragment with the same text
+      and annotations as a question cannot be distinguished by the fallback;
+      longer fragments and other relative-clause analyses are not covered.
+      The relative-clause exclusion can
+      also reject an interrogative WH-word modified by a relative clause.
+      Some complex subject phrases, auxiliary chains in echoes,
+      -ever questions without inversion and unpunctuated subject questions
+      outside the dependency alternative remain unsupported.
+      Quoted words and punctuation can remain ambiguous, and the relative
+      exclusion can suppress similarly punctuated direct questions. A later
+      question mark can license an earlier clause incorrectly. Neither
+      sentence punctuation nor word order guarantees interrogative meaning.
+
+  - id: contextual-spacy
+    tagsets: {deprel: clearnlp}
+    match:
+      # Fronted WH phrase with inversion; question punctuation is not required.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [xpos="IN|TO"]{0,2}
+          [form="exactly"%c & xpos="RB.*"]{0,1}
+          @[form="who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [xpos="MD" | (lemma="be|have|do"%c & xpos="VBD|VBP|VBZ") | (form="['’](s|m|re|ve|d|ll)" & xpos="V.*|MD")]
+          [form="n['’]t|not"%c]{0,1}
+          [xpos="PRP|PRP\$|DT|PDT|CD|NN.*|EX"]
+      # Subject WH questions, including coordinated WH phrases.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="who|what|which|whose"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [xpos="VBD|VBP|VBZ|MD"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # HOW MANY/MUCH phrases used as subjects.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="how"%c & xpos="W.*"] [form="many|much"%c]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          [xpos="VBD|VBP|VBZ|MD"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # WHY with a bare infinitive, including WHY NOT.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          @[form="why"%c & xpos="W.*"] [form="not"%c]{0,1}
+          [xpos="VB"]
+          [form!="[.!?;:]" & xpos!="``|''"]* [form="\?"]
+      # Elliptical questions, including preposition-fronted and nominal WH phrases.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [xpos="IN|TO"]{0,2}
+          @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          (
+            [form="and|or"%c]
+            [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+            [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          )*
+          [form="\?"]
+      # Echo questions: a subject and finite verb precede the first WH-word.
+      - cql: |
+          (<s> | [form="[.!?:;,—–-]"] | [xpos="``"] | [form="and|or|but"%c])
+          [form!="who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however|whether"%c & xpos="PRP|DT|PDT|CD|NN.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|PRP\$"]*
+          [xpos="VBD|VBP|VBZ"]
+          [form!="[.!?;:]|who|whom|whose|which|what|where|when|why|how|whoever|whomever|whichever|whatever|wherever|whenever|however|whether"%c & xpos!="W.*|``|''"]*
+          @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos!="V.*|MD|``|''" & form!="[.!?;:]"]*
+          [form="\?"]
+      # A WH pronoun is the subject of the sentence's finite root verb.
+      - semgrex: |
+          {form:/(?i)who|what|which|whose/;xpos:/W.*/}
+            <nsubj {deprel:ROOT;xpos:/VBD|VBP|VBZ/}
+    unless:
+      # A promoted free-relative WH head can itself be the main verb's subject.
+      - semgrex: |
+          {form:/(?i)who|what|which|whose/;xpos:/W.*/}
+            <nsubj {deprel:ROOT;xpos:/VBD|VBP|VBZ/}
+            >relcl {}
+      # Keep the first WH-word in a coordinated phrase as its sole anchor.
+      - cql: |
+          [form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+          [xpos="DT|PDT|CD|JJ.*|NN.*|POS|IN|TO|RB.*|PRP\$" & form!="n['’]t|not"%c]*
+          [form="and|or"%c] @[form="who|whom|whose|which|what|where|when|why|how"%c & xpos="W.*"]
+      # Comma-delimited relatives with a preceding nominal antecedent.
+      - cql: |
+          [xpos="NN.*|PRP"] [form=","]
+          @[form="who|whom|whose|which"%c & xpos="W.*"]
+          [form!="[.!?;:,]" & xpos!="``|''"]* [form=","]
+    note: |
+      A CLEF proposal using spaCy's ClearNLP-derived dependencies, Penn POS
+      tags, auxiliary lemmas and word order.
+      Fronted questions allow punctuation, an opening quote or AND/OR/BUT
+      before the WH-phrase, and up to two fronted prepositions. Nominal,
+      adjectival, adverbial and prepositional tokens can extend the phrase.
+      The anchor is its first WH-word. Excluding later coordinated WH-words
+      gives one occurrence for *who and what*, while a verb before the
+      conjunction permits separate question clauses.
+
+      Inversion uses a modal or finite BE/HAVE/DO, optionally followed by
+      negation, then a likely subject onset. This branch does not require
+      a question mark. It permits one adverb-tagged EXACTLY immediately
+      before the WH-word, as in *exactly where is the exit?*, while keeping
+      the boundary requirement and anchoring on the WH-word. Other
+      pre-WH modifiers are not added by this exception. Split auxiliary and
+      negative contractions are accepted, including either apostrophe.
+      A WH-word fused with its auxiliary in a single token is not normalized.
+
+      A dependency alternative recognizes WHO/WHAT/WHICH/WHOSE when the
+      WH-word is an nsubj dependent of a VBD/VBP/VBZ sentence root. It
+      anchors on that WH-word without requiring a question mark. Thus
+      *Who called* counts. A WH subject of a subordinate predicate does
+      not qualify. A root-linked WH-word with a relative-clause dependent
+      is excluded too: parsers can promote WHAT in a free relative such
+      as *What happened surprised me*. This alternative covers direct
+      subjects of finite root verbs only; it does not follow determiners,
+      conjuncts, auxiliaries or copulas.
+
+      The sequential subject-question patterns, HOW MANY/MUCH subjects,
+      WHY with a bare infinitive, elliptical questions and echoes still
+      require a following question mark. Their lookahead cannot cross a
+      period, exclamation mark, semicolon,
+      colon or quotation mark. Echoes require a subject and finite verb
+      before the first WH-word, with no later verb before the question mark.
+      WHETHER is excluded; -ever forms are included only in the inversion
+      branch. Comma-delimited WHO/WHOM/WHOSE/WHICH relatives preceded by
+      a noun or personal pronoun are excluded.
+
+      These are local heuristics, not a full clause analysis. Supplied POS
+      tags, lemmas and dependencies affect the result. Root attachment is
+      evidence for a standalone question, not proof of interrogative meaning.
+      Fragmentary relatives, word mentions and parser errors can remain
+      ambiguous. A parser can label bare *What happened* as a relative
+      fragment, leaving it undetected. The relative-clause exclusion can
+      also reject an interrogative WH-word modified by a relative clause.
+      Some complex subject phrases, auxiliary chains in echoes,
+      -ever questions without inversion and unpunctuated subject questions
+      outside the dependency alternative remain unsupported.
       Quoted words and punctuation can remain ambiguous, and the relative
       exclusion can suppress similarly punctuated direct questions. A later
       question mark can license an earlier clause incorrectly. Neither
@@ -144,3 +330,74 @@ rules:
       WHO must immediately follow the boundary and AUX must immediately
       follow WHO. The original tagging program and its input have not been
       reproduced or verified.
+
+  - id: mat
+    from: mat
+    at: Tagger_MAT.pl, SHORTCUTS; basic tags needed for complex tags; tags WH questions (lines 265–272)
+    match:
+      # The ordinary branch tags WHO after punctuation and before an auxiliary.
+      - cql: |
+          [xpos="\W.*" & form!=".*,.*" & xpos!=".*,.*"]
+          @[
+            form=".*(\bwhat|where|when|how|whether|why|whoever|whomever|whichever|wherever|whenever|whatever|however)(_.*)?"%c
+            & form!=".*\b(however|whatever)(_.*)?"%c
+            & xpos="\w.*"
+          ]
+          [
+            (xpos="MD.*" & form!=".*\b(${mat/prepositions}|${mat/quantifiers}|${mat/indefinite-pronouns})(_.*)?"%c)
+            | form=".*\b(do|does|did|doing|done|have|has|'ve|had|having|hath|be|am|is|are|was|were|been|being|m|re)(_.*)?"%c
+            | (form=".*\bs(_.*)?"%c & xpos="VBZ.*"%c)
+          ]
+      # MAT's extra BE branch tags the intervening token, not the WH-word.
+      - cql: |
+          [xpos="\W.*" & form!=".*,.*" & xpos!=".*,.*"]
+          @[xpos="\w.*"]
+          [
+            form=".*(\bwhat|where|when|how|whether|why|whoever|whomever|whichever|wherever|whenever|whatever|however)(_.*)?"%c
+            & form!=".*\b(however|whatever)(_.*)?"%c
+          ]
+          [
+            form=".*\b(be|am|is|are|was|were|been|being|m|re)(_.*)?"%c
+            | (form=".*\bs(_.*)?"%c & xpos="VBZ.*"%c)
+          ]
+    note: |
+      MAT 1.3.2 requires a punctuation tag followed by a WHO form and
+      a modal or listed DO/HAVE/BE form. Punctuation means a tag beginning
+      with a non-word character; a comma anywhere in that token's form or
+      tag disqualifies it. Quotes, brackets and dashes can therefore qualify.
+      Sentence start alone does not. No final question mark is required.
+
+      The source excludes HOWEVER and WHATEVER. Its WHO expression is
+      ungrouped after the initial word-boundary assertion, so only WHAT
+      requires that boundary. The other alternatives can match word endings:
+      *somewhere* can satisfy WHERE. The patterns preserve this behaviour
+      and the separate word-boundary exclusion for HOWEVER/WHATEVER.
+
+      DO/HAVE/BE use case-insensitive word-boundary matching, including an
+      optional underscore suffix in a supplied form. Bare *be* and *hath*
+      qualify. BE accepts *'m*, *'re* and *'s*, with either apostrophe style;
+      *'s* requires a VBZ-prefixed tag. The boundary before HAVE's *'ve*
+      cannot match a standalone apostrophe-initial token, although it can
+      match inside a fused form such as *we've*. A following split *n't*
+      does not block the rule. Fused negatives are not normalized.
+
+      The modal branch uses an MD-prefixed tag. Basic lexical retagging
+      removes MAT's prepositions, quantifiers and indefinite pronouns from
+      that branch; the explicit exceptions account for those passes.
+      Other contextual retagging and unusual embedded tag strings are not
+      fully reconstructed. No WH POS test is required, but the token being
+      tagged must have a tag beginning with a word character for MAT's
+      substitution to succeed.
+
+      A separate source branch allows one token between punctuation and
+      WHO, followed specifically by BE. It nevertheless adds WHQU to that
+      intervening token. The second pattern preserves that anchor: in
+      *: exactly where is the exit?*, it detects *exactly*, not *where*.
+      That is a false positive and a missed question under CLEF's marking.
+
+      The source's input can contain several sentences. CLEF patterns stay
+      within a supplied sentence, so preceding sentence-final punctuation
+      outside that sentence cannot supply the required context. MAT's
+      Stanford tagger, raw-text correction and full sequence of intermediate
+      tags are not reproduced. The linguistic examples remain independent
+      of MAT's detection quirks.

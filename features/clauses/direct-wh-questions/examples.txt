@@ -72,7 +72,7 @@ The package arrived yesterday.
 [Where] does she live.
     Inversion can identify a question without a final question mark.
 [Who] called
-    The contextual subject-question branch requires a question mark and misses this unpunctuated question.
+    The contextual dependency alternative recognizes WHO as the subject of the finite sentence root without requiring a question mark.
 [Where] and when did she go?
     One coordinated WH-phrase; only WHERE is marked.
 [Who] called and [what] happened?
@@ -99,3 +99,23 @@ I asked John, [who] called?
     A comma introducing a direct subject question, without a closing relative-clause comma.
 [Who] called, I wonder?
     The question has no preceding nominal antecedent for the relative-clause exclusion.
+
+One question remains: {exactly} [where] is the exit?
+    MAT's extra BE branch tags exactly instead of where: a false positive and a missed question under this feature's marking.
+One question remains: exactly [where] does she live?
+    MAT's extra branch allows BE, not DO, after the WH-word.
+She asked: "[Where]'s the exit?"
+    The opening quote can supply MAT's punctuation context, and split 's tagged VBZ can supply BE.
+She asked: "[Why] didn't you call?"
+    MAT permits split negative contractions after the WH-word; Biber's rule excludes them.
+One question remains: [whatever] is he doing?
+    MAT explicitly excludes whatever, unlike Biber's WHO inventory.
+The notice says: {somewhere} is safe.
+    A statement. MAT's ungrouped WHO expression lets somewhere satisfy WHERE.
+Remember: {somewhat} does not mean completely.
+    WHAT alone retains the source's initial word-boundary requirement, so somewhat does not supply it.
+
+[What] happened
+    Intended as a standalone question. Stanza makes interrogative WHAT the root and HAPPENED a relative-clause dependent; the contextual two-token fallback detects WHAT. spaCy supplies the subject-of-root analysis and also detects WHAT.
+[What] happened?
+    With the question mark, both parsers make HAPPENED the root and WHAT its subject. Both contextual variants detect WHAT.

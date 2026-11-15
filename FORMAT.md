@@ -177,7 +177,7 @@ Manual detections instead have one or more character-offset pieces identifying o
 
 ## 5. Patterns
 
-Evaluate CQL and Semgrex patterns within individual sentences, using the sentence boundaries supplied by the annotation pipeline. A match, including its context and any exclusion pattern, must stay within one sentence. CQL `<s>` marks the start of that sentence. Apply exclusions and merge duplicate anchors within each sentence before summing counts for the text.
+Evaluate CQL and Semgrex patterns within individual sentences, using the sentence boundaries supplied by the annotation pipeline. A match, including its context and any exclusion pattern, must stay within one sentence. CQL `<s>` marks the start of that sentence and `</s>` its end. These boundaries consume no tokens and do not stand for punctuation: punctuation, when present, is part of the supplied token sequence. Apply exclusions and merge duplicate anchors within each sentence before summing counts for the text.
 
 ### 5.1 Annotation layers
 
@@ -209,6 +209,7 @@ Token patterns use a subset of the [CQP](https://cwb.sourceforge.io/files/CQP_Ma
 [] @[xpos="VBN"]                                  [] is any token
 [lemma="be"] @[xpos="VBD"]                        @ marks the anchor token
 (<s> | [xpos="W.*"]) @[lemma="have"]              alternatives; <s> is the start of a sentence
+<s> @[] [] </s>                                   exactly two tokens occupying the whole sentence
 @[xpos="VBN"] ([form="and|or"%c] [xpos="VBN"])*   a repeated group; * allows zero or more repetitions
 ```
 
