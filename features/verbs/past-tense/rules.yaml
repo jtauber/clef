@@ -316,14 +316,15 @@ rules:
     tagsets: {deprel: clearnlp}
     match:
       - cql: |
-          [xpos="VBD" & deprel!="punct"]
+          [xpos="VBD" & deprel!="punct" & form!=" "]
     note: |
       pybiber 0.3.1 counts the matches of `\S*_vbd` in a document's
       lower-cased word_TAG pairs (biber_dict.py), with the tags of spaCy's
       en_core_web_sm. Before matching, it clears the POS tag of tokens
       whose dependency relation is `punct` (parse_functions.py,
       `_block_regex_features`), so their original POS tag does not
-      contribute to the count.
+      contribute to the count. It also drops tokens whose form is exactly
+      one space; the reconstruction excludes those tokens too.
       Auxiliaries, irrealis *were* and *had* in *had better* all count.
 
       This reconstruction tests the POS and dependency fields directly.
@@ -331,7 +332,4 @@ rules:
       non-Penn tag such as VBDX. It can find `_vbd` inside a word form such
       as `label_vbd` even when that token is tagged NN. This rule requires
       VBD in the POS field and omits both string-matching behaviours.
-      Pybiber also drops tokens whose form is a single space; this rule
-      counts such a token if it is supplied with VBD and a dependency
-      relation other than `punct`. These differences are recorded on
-      controlled inputs.
+      These differences are recorded on controlled inputs.

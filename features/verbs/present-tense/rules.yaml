@@ -108,5 +108,5 @@ rules:
       searching, so it also counts a supplied lower-case `vbz`; this rule
       does not. The difference is recorded on controlled input. As with
       past tense, this pattern omits the source's matching of tag prefixes
-      and substrings inside word forms, and its filtering of single-space
-      tokens.
+      and substrings inside word forms. This present-tense pattern also
+      omits the source's filtering of single-space tokens.
